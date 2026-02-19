@@ -1,3 +1,5 @@
+import { allPosts } from "../../utils/placeholderPosts";
+
 export function meta() {
   return [
     { title: "New React Router App" },
@@ -5,7 +7,6 @@ export function meta() {
   ];
 }
 
-export default function Home() {
+export default function Home({ loaderData }) {
   return <h1>Hello World</h1>;
 }
-11;

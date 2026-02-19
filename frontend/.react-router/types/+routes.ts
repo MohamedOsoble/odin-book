@@ -20,12 +20,15 @@ type Pages = {
   "/register": {
     params: {};
   };
+  "/posts": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/login" | "/register";
+    page: "/" | "/login" | "/register" | "/posts";
   };
   "routes/home/home.jsx": {
     id: "routes/home/home";
@@ -39,6 +42,10 @@ type RouteFiles = {
     id: "routes/register/register";
     page: "/register";
   };
+  "routes/posts/explore.jsx": {
+    id: "routes/posts/explore";
+    page: "/posts";
+  };
 };
 
 type RouteModules = {
@@ -46,4 +53,5 @@ type RouteModules = {
   "routes/home/home": typeof import("./app/routes/home/home.jsx");
   "routes/login/login": typeof import("./app/routes/login/login.jsx");
   "routes/register/register": typeof import("./app/routes/register/register.jsx");
+  "routes/posts/explore": typeof import("./app/routes/posts/explore.jsx");
 };

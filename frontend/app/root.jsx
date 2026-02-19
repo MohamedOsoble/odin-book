@@ -8,6 +8,7 @@ import {
 } from "react-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { LoadingPage } from "./components/Loading";
 
 import "./app.css";
 import logoDark from "../public/logo2-dark.svg";
@@ -52,18 +53,6 @@ export const links = () => [
 ];
 
 export function Layout({ children }) {
-  const [posts, setPosts] = useState({});
-  const init = true;
-
-  // get posts data
-  useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/posts").then((response) => {
-      console.log("API Called...");
-      const { data } = response;
-      console.log(data);
-      setPosts({ data });
-    });
-  }, [init]); // run only once
   return (
     <html lang="en">
       <head>
@@ -89,7 +78,7 @@ export function Layout({ children }) {
         </header>
         <div className="w-full space-y-6 px-4 pb-12">
           <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-            <ul className="hidden md:flex items-center space-x-8 md:pl-28">
+            <ul className="flex items-center space-x-12 md:pl-10">
               {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
             </ul>
           </nav>
@@ -100,6 +89,10 @@ export function Layout({ children }) {
       </body>
     </html>
   );
+}
+
+export function HydrateFallback() {
+  return <LoadingPage />;
 }
 
 export default function App() {
