@@ -614,7 +614,7 @@ export function getPost(postId) {
 }
 
 export function getNPosts(n) {
-  posts.filter((post) => post.id <= n);
+  return posts.filter((post) => post.id <= n);
 }
 
 export function allPosts() {

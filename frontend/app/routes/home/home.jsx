@@ -1,5 +1,3 @@
-import { allPosts } from "../../utils/placeholderPosts";
-
 export function meta() {
   return [
     { title: "New React Router App" },

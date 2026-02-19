@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String         @id @default(uuid())
+  email            String         @unique
+  name             String?
+  salt             String
+  hash             String
+  posts            Post[]
+  comments         Comment[]
+  following        Follows[]      @relation("following")
+  followers        Follows[]      @relation("followers")
+  receivedRequests Requests[]     @relation("received")
+  sentRequests     Requests[]     @relation("requested")
+  conversations    Conversation[]
+  messages         Message[]
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  content   String?
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  likes     Int?
+  comments  Comment[]
+}
+
+model Comment {
+  id       String @id @default(uuid())
+  content  String
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+}
+
+model Follows {
+  followerId  String
+  follower    User   @relation("following", fields: [followerId], references: [id])
+  followingId String
+  following   User   @relation("followers", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId]) // Composite ID
+}
+
+model Requests {
+  senderId   String
+  sender     User   @relation("requested", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User   @relation("received", fields: [receiverId], references: [id])
+
+  @@id([senderId, receiverId]) //Composite ID
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  messages  Message[]
+  users     User[] // For group or 1-on-1 chats
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+}
