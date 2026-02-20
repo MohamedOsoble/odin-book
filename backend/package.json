@@ -17,5 +17,13 @@
     "express": "^5.2.1",
     "pg": "^8.18.0",
     "prisma": "^7.4.1"
+  },
+  "devDependencies": {
+    "@eslint/css": "^0.14.1",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.0.1",
+    "@eslint/markdown": "^7.5.1",
+    "eslint": "^10.0.1",
+    "globals": "^17.3.0"
   }
 }
