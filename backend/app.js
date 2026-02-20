@@ -1,16 +1,22 @@
 const express = require("express");
-const app = express();
+const cors = require("cors");
 const routes = require("./routes");
 
+// Instantiate express app.
+const app = express();
+
+// Add cors and request parser
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
+
+// temp home route
 app.get("/", (req, res) => res.send("Hello, world!"));
 
 const PORT = 3000;
 
 app.use("/user", routes.user);
 app.listen(PORT, (error) => {
-  // This is important!
-  // Without this, any startup errors will silently fail
-  // instead of giving you a helpful error message.
   if (error) {
     throw error;
   }
