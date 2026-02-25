@@ -1,8 +1,10 @@
 const { prisma } = require("../lib/prisma");
 const issueJWT = require("../lib/jwt").issue;
 const passport = require("passport");
+const validate = require("../validators/user");
+const { validationResult, matchedData } = require("express-validator");
 
-module.exports.login = (req, res, next) => {
+exports.login = (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (!user) {
       return res.status(400).json({
@@ -37,7 +39,7 @@ module.exports.login = (req, res, next) => {
   })(req, res);
 };
 
-module.exports.logout = (req, res) => {
+exports.logout = (req, res) => {
   if (req.cookies["jwt"]) {
     res.clearCookie("jwt").status(200).json({
       message: "You have logged out",
@@ -49,19 +51,17 @@ module.exports.logout = (req, res) => {
   }
 };
 
-module.exports.isLoggedIn = (req, res) => {
+exports.isLoggedIn = (req, res) => {
   return res.json("Is logged in route");
 };
 
-function validateForm(form) {
-  console.log(form);
-  return true;
-}
-
-module.exports.register = (req, res, next) => {
-  const form = req.body;
-  if (!validateForm(form)) {
-    return res.json("Some form error");
-  }
-  return res.json("register route received and form valid");
-};
+exports.register = [
+  validate.register,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    return res.json("register route received and form valid");
+  },
+];

@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const controller = require("../controllers/user");
+const validator = require("../validators/user");
 // const auth = passport.authenticate("jwt", { session: false });
 
 const router = Router();
@@ -14,7 +15,7 @@ router.get("/logout", (req, res) => {
 
 router.post("/logout", controller.logout);
 
-router.post("/register", controller.register);
+router.post("/register", validator.register, controller.register);
 
 // Is logged in route
 router.get("/isLoggedIn", controller.isLoggedIn);
