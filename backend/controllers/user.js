@@ -1,13 +1,67 @@
-const { prisma } = require('../lib/prisma');
+const { prisma } = require("../lib/prisma");
+const issueJWT = require("../lib/jwt").issue;
+const passport = require("passport");
 
-module.exports.login = (req, res) => {
-  return res.json('Login route');
+module.exports.login = (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (!user) {
+      return res.status(400).json({
+        message: "Incorrect user credentials, please check and try again",
+        user: user,
+      });
+    } else if (err) {
+      return res.status(400).json({
+        message: "Something went wrong with the request, please try again",
+        user: user,
+      });
+    }
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      // generate a signed son web token with the contents of user object and return it in the response
+      const tokenObject = issueJWT(user);
+      res.cookie("jwt", tokenObject, {
+        httpOnly: true,
+        secure: false, // set to true in production with HTTPS
+        sameSite: "Lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      return res.json({
+        message: "Login successful",
+        user: { id: user.id, username: user.name },
+        tokenObject,
+      });
+    });
+  })(req, res);
 };
 
 module.exports.logout = (req, res) => {
-  return res.json('Logout route');
+  if (req.cookies["jwt"]) {
+    res.clearCookie("jwt").status(200).json({
+      message: "You have logged out",
+    });
+  } else {
+    res.status(401).json({
+      error: "Invalid jwt",
+    });
+  }
 };
 
 module.exports.isLoggedIn = (req, res) => {
-  return res.json('Is logged in route');
+  return res.json("Is logged in route");
+};
+
+function validateForm(form) {
+  console.log(form);
+  return true;
+}
+
+module.exports.register = (req, res, next) => {
+  const form = req.body;
+  if (!validateForm(form)) {
+    return res.json("Some form error");
+  }
+  return res.json("register route received and form valid");
 };
