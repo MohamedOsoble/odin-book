@@ -25,7 +25,7 @@ exports.register = [
       return value === req.body.password;
     })
     .withMessage("Passwords must match"),
-  body("name")
+  body("username")
     .trim()
     .notEmpty()
     .withMessage("Username cannot be empty")
@@ -34,7 +34,7 @@ exports.register = [
     .custom(async (value) => {
       const existingUser = await prisma.user.findFirst({
         where: {
-          name: value,
+          username: value,
         },
       });
       if (existingUser) {

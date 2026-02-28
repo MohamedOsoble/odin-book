@@ -2,8 +2,9 @@ const express = require("express");
 const routes = require("./routes");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { prisma } = require("./lib/prisma");
 
-require("./lib/passport");
+require("./lib/passport.js");
 
 // Instantiate express app.
 const app = express();

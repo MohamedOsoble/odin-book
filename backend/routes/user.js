@@ -15,7 +15,7 @@ router.get("/logout", (req, res) => {
 
 router.post("/logout", controller.logout);
 
-router.post("/register", validator.register, controller.register);
+router.post("/register", controller.register);
 
 // Is logged in route
 router.get("/isLoggedIn", controller.isLoggedIn);

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const Prisma = require("./prisma.js").prisma;
+const { prisma } = require("./prisma");
 const JwtStrategy = require("passport-jwt").Strategy;
 const validatePassword = require("./password.js").validate;
 
@@ -24,17 +24,15 @@ const JWTOptions = {
 passport.use(
   new LocalStrategy(async function verifyCallback(username, password, done) {
     try {
-      console.log("Loading local strategy");
-      const user = await Prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { username: username },
       });
       if (!user) {
         return done(null, false);
       }
 
-      const isValid = validatePassword(password, user.hash, user.salt);
+      const isValid = validatePassword(password, user.salt, user.hash);
       if (isValid) {
-        console.log(user);
         return done(null, user);
       } else {
         return done(null, false);
@@ -49,7 +47,7 @@ passport.use(
 
 passport.use(
   new JwtStrategy(JWTOptions, async function (jwt_payload, done) {
-    return await Prisma.user
+    return await prisma.user
       .findFirst({
         where: { id: jwt_payload.sub },
       })

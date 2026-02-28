@@ -1,12 +1,13 @@
-const { prisma } = require("../lib/prisma");
 const issueJWT = require("../lib/jwt").issue;
 const passport = require("passport");
 const validate = require("../validators/user");
+const db = require("../queries/user");
 const { validationResult, matchedData } = require("express-validator");
 
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (!user) {
+      console.log("No user found...");
       return res.status(400).json({
         message: "Incorrect user credentials, please check and try again",
         user: user,
@@ -57,11 +58,23 @@ exports.isLoggedIn = (req, res) => {
 
 exports.register = [
   validate.register,
-  (req, res, next) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
+    console.log(errors);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    return res.json("register route received and form valid");
+    const user = await db.newUser(
+      req.body.username,
+      req.body.email,
+      req.body.password,
+    );
+    return res.status(400).json({
+      message: "Successfully registered",
+      data: {
+        id: user.id,
+        username: user.username,
+      },
+    });
   },
 ];

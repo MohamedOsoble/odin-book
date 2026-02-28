@@ -80,15 +80,15 @@ export default function Login() {
         </div>
         <div class="mb-5">
           <label
-            for="cpassword"
+            for="passwordConfirmation"
             class="block mb-2.5 text-sm font-medium text-heading"
           >
             Confirm password
           </label>
           <input
             type="password"
-            name="cpassword"
-            id="cpassword"
+            name="passwordConfirmation"
+            id="passwordConfirmation"
             class="bg-neutral-secondary-medium border border-default-medium 
             text-heading text-sm rounded-base focus:ring-brand focus:border-brand 
             block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
