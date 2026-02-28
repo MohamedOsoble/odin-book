@@ -1,14 +1,14 @@
 const issueJWT = require("../lib/jwt").issue;
 const passport = require("passport");
 const validate = require("../validators/user");
+const { auth } = require("./auth");
 const db = require("../queries/user");
 const { validationResult, matchedData } = require("express-validator");
 
 exports.login = async (req, res, next) => {
   passport.authenticate("local", { session: false }, (err, user, info) => {
     if (!user) {
-      console.log("No user found...");
-      return res.status(400).json({
+      return res.status(401).json({
         message: "Incorrect user credentials, please check and try again",
         user: user,
       });
@@ -43,17 +43,22 @@ exports.login = async (req, res, next) => {
 exports.logout = (req, res) => {
   if (req.cookies["jwt"]) {
     res.clearCookie("jwt").status(200).json({
+      success: true,
       message: "You have logged out",
     });
   } else {
-    res.status(401).json({
-      error: "Invalid jwt",
+    res.status(400).json({
+      success: false,
+      message: "Login session already expired",
     });
   }
 };
 
-exports.isLoggedIn = (req, res) => {
-  return res.json("Is logged in route");
+exports.checkAuth = (req, res) => {
+  return res.status(200).json({
+    id: req.cookies["jwt"]["id"],
+    username: req.user.username,
+  });
 };
 
 exports.register = [

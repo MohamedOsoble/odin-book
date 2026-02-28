@@ -1,23 +1,17 @@
 const { Router } = require("express");
 const controller = require("../controllers/user");
+const passport = require("passport");
 const validator = require("../validators/user");
-// const auth = passport.authenticate("jwt", { session: false });
+const { auth } = require("../controllers/auth");
 
 const router = Router();
 
-// Login route
 router.post("/login", controller.login);
 
-// Logout route
-router.get("/logout", (req, res) => {
-  return res.json("This is a post only route");
-});
-
-router.post("/logout", controller.logout);
+router.get("/logout", controller.logout);
 
 router.post("/register", controller.register);
 
-// Is logged in route
-router.get("/isLoggedIn", controller.isLoggedIn);
+router.get("/checkAuth", auth, controller.checkAuth);
 
 module.exports = router;
