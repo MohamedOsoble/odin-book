@@ -13,3 +13,9 @@ exports.newUser = async (username, email, password) => {
   });
   return user;
 };
+
+exports.all = async () => {
+  console.log("Finding all users...");
+  const users = await prisma.user.findMany();
+  return users;
+};

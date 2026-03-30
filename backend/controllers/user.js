@@ -1,7 +1,6 @@
 const issueJWT = require("../lib/jwt").issue;
 const passport = require("passport");
 const validate = require("../validators/user");
-const { auth } = require("./auth");
 const db = require("../queries/user");
 const { validationResult, matchedData } = require("express-validator");
 
@@ -83,3 +82,9 @@ exports.register = [
     });
   },
 ];
+
+exports.all = async () => {
+  console.log("All users called");
+  const result = await db.all();
+  return result;
+};
