@@ -12,14 +12,14 @@ exports.login = async (req, res, next) => {
         user: user,
       });
     } else if (err) {
-      return res.status(400).json({
+      return res.status(500).json({
         message: "Something went wrong with the request, please try again",
         user: user,
       });
     }
     req.login(user, { session: false }, (err) => {
       if (err) {
-        res.send(err);
+        res.status(500).json(err);
       }
       // generate a signed son web token with the contents of user object and return it in the response
       const tokenObject = issueJWT(user);
@@ -40,13 +40,16 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = (req, res) => {
+  console.log("Logout called...");
   if (req.cookies["jwt"]) {
-    res.clearCookie("jwt").status(200).json({
+    console.log("Clearing cookies...");
+    return res.clearCookie("jwt").status(200).json({
       success: true,
       message: "You have logged out",
     });
   } else {
-    res.status(400).json({
+    console.log("Logout failed...");
+    return res.status(400).json({
       success: false,
       message: "Login session already expired",
     });
@@ -54,9 +57,18 @@ exports.logout = (req, res) => {
 };
 
 exports.checkAuth = (req, res) => {
+  console.log("checking auth token...");
+  if (req.user) {
+    console.log("Theres a user...");
+    return res.status(200).json({
+      user: {
+        id: req.cookies["jwt"]["id"],
+        username: req.user.username,
+      },
+    });
+  }
   return res.status(200).json({
-    id: req.cookies["jwt"]["id"],
-    username: req.user.username,
+    user: null,
   });
 };
 
@@ -66,14 +78,15 @@ exports.register = [
     const errors = validationResult(req);
     console.log(errors);
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+      return res.status(200).json({ error: true, errors: errors.array() });
     }
     const user = await db.newUser(
       req.body.username,
       req.body.email,
       req.body.password,
     );
-    return res.status(400).json({
+    return res.status(200).json({
+      error: false,
       message: "Successfully registered",
       data: {
         id: user.id,

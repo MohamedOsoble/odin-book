@@ -4,7 +4,6 @@ const validate = require("../validators/post");
 // Dont think this will be needed
 exports.all = async (req, res, next) => {
   const posts = await db.all();
-  console.log("All posts called successfully");
   return res.json(posts);
 };
 
@@ -50,14 +49,22 @@ exports.userPosts = async (req, res, next) => {
   return res.json(posts);
 };
 
-exports.popularPosts = (req, res, next) => {
-  return res.json("Return list of most popular posts");
+exports.popularPosts = async (req, res, next) => {
+  const posts = await db.popular();
+  return res.json(posts);
 };
 
-exports.explorePage = (req, res, next) => {
-  return res.json("Return list of posts specific to the user");
+exports.explorePage = async (req, res, next) => {
+  if (req.user) {
+    const posts = await db.explore(req.user);
+    return res.json(posts);
+  } else {
+    const posts = await db.popular();
+    return res.json(posts);
+  }
 };
 
-exports.recentPosts = (req, res, next) => {
-  return res.json("Returns list of posts made in the last 72h");
+exports.recentPosts = async (req, res, next) => {
+  const posts = await db.recent();
+  return res.json(posts);
 };

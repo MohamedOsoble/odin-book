@@ -1,9 +1,13 @@
 import { useLoaderData } from "react-router";
 import { allPosts } from "../../utils/placeholderPosts";
+import * as API from "../../api/posts";
 
 export async function clientLoader() {
-  const posts = allPosts();
-  return posts;
+  const posts = await API.explore();
+  if (posts.data.length < 1) {
+    return allPosts();
+  }
+  return posts.data;
 }
 
 function createPost(posts) {
@@ -36,13 +40,12 @@ function createPost(posts) {
 }
 
 export default function Explore({ loaderData }) {
-  const posts = loaderData.filter((post) => post.id <= 15);
   return (
     <div className="flex flex-col">
       <h1 className="justify-self-center self-center border-grey-100 text-6xl font-bold pb-10">
         Explore Posts
       </h1>
-      {createPost(posts)}
+      {createPost(loaderData)}
     </div>
   );
 }

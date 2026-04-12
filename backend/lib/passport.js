@@ -1,17 +1,17 @@
 require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const { prisma } = require("./prisma");
+const DbPrivate = require("./prisma").private;
+const DbPublic = require("./prisma").public;
 const JwtStrategy = require("passport-jwt").Strategy;
 const validatePassword = require("./password.js").validate;
 
 const cookieExtractor = function (req) {
-  let token = "";
   if (req.cookies["jwt"]) {
     const cookie = req.cookies?.["jwt"]["token"].split(" ");
-    token = cookie[0];
+    return cookie[0];
   }
-  return token;
+  return null;
 };
 
 // JWT Options
@@ -24,7 +24,7 @@ const JWTOptions = {
 passport.use(
   new LocalStrategy(async function verifyCallback(username, password, done) {
     try {
-      const user = await prisma.user.findUnique({
+      const user = await DbPrivate.user.findUnique({
         where: { username: username },
       });
       if (!user) {
@@ -33,7 +33,11 @@ passport.use(
 
       const isValid = validatePassword(password, user.salt, user.hash);
       if (isValid) {
-        return done(null, user);
+        return done(null, {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+        });
       } else {
         return done(null, false);
       }
@@ -43,19 +47,20 @@ passport.use(
   }),
 );
 
-// JWT Strategy for auth
+// JWT Strategy for auth -- No password verification so use public db to not leak salt/hash
 
 passport.use(
   new JwtStrategy(JWTOptions, async function (jwt_payload, done) {
-    return await prisma.user
-      .findFirst({
-        where: { id: jwt_payload.sub },
-      })
-      .then((user) => {
-        return done(null, user);
-      })
-      .catch((err) => {
-        return done(err);
-      });
+    const user = await DbPublic.user.findFirst({
+      where: {
+        id: jwt_payload.sub,
+      },
+    });
+    if (user) {
+      console.log("user found");
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
   }),
 );

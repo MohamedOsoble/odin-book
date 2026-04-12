@@ -6,8 +6,8 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { Login, Logout, isAuthenticated } from "../../../utils/MockAPI"; // Change to API later
-// import { isAuthenticated } from "./Api";
+import * as API from "../api/user";
+
 // components
 
 // user context
@@ -20,25 +20,27 @@ function UserProvider(props) {
   // fetch user on mount
   useEffect(() => {
     // checks if user is logged in
-    isAuthenticated()
+    API.auth()
       .then(function (response) {
-        setUser(response.data.id);
+        if (response.data.user) {
+          setUser(response.data.user);
+        }
       })
       .catch((error) => {
         setUser(false);
       });
   }, []); // run only once
 
-  const login = useCallback(async (data) => {
-    const response = await Login(data);
+  const login = useCallback(async (user) => {
+    const response = await API.login(user);
     if (response.status === 200) {
-      setUser(response.data.user.id);
+      setUser(response.data.user);
     }
     return response;
   }, []);
 
   const logout = useCallback(() => {
-    Logout().then(function () {
+    API.logout().then(function () {
       setUser(false);
     });
   }, []);

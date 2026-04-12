@@ -1,4 +1,4 @@
-const { prisma } = require("../lib/prisma");
+const prisma = require("../lib/prisma").public;
 
 exports.create = async (authorId, content, isPublished) => {
   const post = await prisma.post.create({
@@ -12,7 +12,12 @@ exports.create = async (authorId, content, isPublished) => {
 };
 
 exports.all = async () => {
-  const posts = await prisma.post.findMany({});
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true,
+      comments: true,
+    },
+  });
   return posts;
 };
 
@@ -74,11 +79,28 @@ exports.popular = async () => {
   return posts;
 };
 
+exports.explore = async (userId) => {
+  const posts = await prisma.post.findMany({
+    where: {
+      author: {
+        followers: {
+          some: {
+            followerId: userId,
+          },
+        },
+      },
+    },
+  });
+  return posts;
+};
+
 exports.recent = async () => {
   const currDate = Date.now();
   const post = await prisma.post.findMany({
     where: {
-      createdAt: currDate - 1000 * 60 * 60 * 72, // Within last 72 hours
+      createdAt: {
+        gte: new Date(currDate - 1000 * 60 * 60 * 72), // Within last 72 hours
+      },
     },
     orderBy: {
       createdAt: "desc",

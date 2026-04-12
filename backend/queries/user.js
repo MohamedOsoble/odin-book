@@ -1,4 +1,4 @@
-const { prisma } = require("../lib/prisma");
+const prisma = require("../lib/prisma").public;
 const { validate, generate } = require("../lib/password");
 
 exports.newUser = async (username, email, password) => {

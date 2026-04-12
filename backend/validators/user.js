@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const { prisma } = require("../lib/prisma");
+const prisma = require("../lib/prisma").public;
 
 exports.register = [
   body("email")

@@ -1,23 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUser } from "../../contexts/UserContexts";
+import { useNavigate } from "react-router";
 
 export default function Login() {
   const [formState, setFormState] = useState({});
   const [formErrors, setFormErrors] = useState({});
+  const { user, login } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // checks if user is logged in
+    if (user) {
+      redirectUser();
+    }
+  }, [user]);
+
+  const redirectUser = () => {
+    navigate("/posts");
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormState({ ...formState, [name]: value });
+    setFormErrors({});
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const username = formState.username;
     const password = formState.password;
-    console.log(
-      `Your username is ${username} and your password is ${password}`,
-    );
-
-    // Do some other logging in stuff later;
+    const response = await login({ username, password });
+    if (response.status === 200) {
+      redirectUser();
+    } else {
+      setFormErrors({
+        errorMessage: response.data.message,
+      });
+    }
   };
 
   return (
@@ -66,6 +85,7 @@ export default function Login() {
             required
           />
         </div>
+        {formErrors ? <div>{formErrors.errorMessage}</div> : <></>}
         <button
           type="submit"
           class="text-white bg-brand box-border border border-white rounded-md 
