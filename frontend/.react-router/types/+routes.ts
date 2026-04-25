@@ -26,12 +26,17 @@ type Pages = {
   "/posts": {
     params: {};
   };
+  "/profile/:username": {
+    params: {
+      "username": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/login" | "/logout" | "/register" | "/posts";
+    page: "/" | "/login" | "/logout" | "/register" | "/posts" | "/profile/:username";
   };
   "routes/home/home.jsx": {
     id: "routes/home/home";
@@ -53,6 +58,10 @@ type RouteFiles = {
     id: "routes/posts/explore";
     page: "/posts";
   };
+  "routes/profile/profile.jsx": {
+    id: "routes/profile/profile";
+    page: "/profile/:username";
+  };
 };
 
 type RouteModules = {
@@ -62,4 +71,5 @@ type RouteModules = {
   "routes/login/logout": typeof import("./app/routes/login/logout.jsx");
   "routes/register/register": typeof import("./app/routes/register/register.jsx");
   "routes/posts/explore": typeof import("./app/routes/posts/explore.jsx");
+  "routes/profile/profile": typeof import("./app/routes/profile/profile.jsx");
 };

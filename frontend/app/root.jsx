@@ -53,7 +53,7 @@ export function Layout({ children }) {
             />
           </div>
         </header>
-        <div>{children}</div>
+        <div class="flex flex-col items-center">{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>

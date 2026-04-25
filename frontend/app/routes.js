@@ -6,4 +6,5 @@ export default [
   route("/logout", "routes/login/logout.jsx"),
   route("/register", "routes/register/register.jsx"),
   route("/posts", "routes/posts/explore.jsx"),
+  route("/profile/:username", "routes/profile/profile.jsx"),
 ];

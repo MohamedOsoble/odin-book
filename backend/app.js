@@ -36,6 +36,7 @@ const PORT = 3000;
 
 app.use("/user", routes.user);
 app.use("/posts", routes.post);
+app.use("/profile", routes.profile);
 app.listen(PORT, (error) => {
   if (error) {
     throw error;

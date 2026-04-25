@@ -29,7 +29,7 @@ exports.deletePost = async (req, res, next) => {
 exports.createPost = [
   validate.newPost,
   async (req, res, next) => {
-    const post = await db.create(req.authorId, req.content, req.isPublished);
+    const post = await db.create(req.body.userId, req.body.content);
     if (post) {
       return res.status(200).json({
         message: "Success",
@@ -54,17 +54,28 @@ exports.popularPosts = async (req, res, next) => {
   return res.json(posts);
 };
 
+exports.postsByFollowing = async (req, res, next) => {
+  const posts = await db.postsByFollowing(req.user);
+  return res.json(posts);
+};
+
 exports.explorePage = async (req, res, next) => {
-  if (req.user) {
-    const posts = await db.explore(req.user);
-    return res.json(posts);
-  } else {
-    const posts = await db.popular();
-    return res.json(posts);
-  }
+  const posts = await db.popular();
+  console.log(posts);
+  return res.json(posts);
 };
 
 exports.recentPosts = async (req, res, next) => {
   const posts = await db.recent();
   return res.json(posts);
+};
+
+exports.likePost = async (req, res, next) => {
+  const userId = req.user;
+  const postId = req.params.postid;
+  console.log(postId);
+  if (userId && postId) {
+    const post = await db.likePost(userId, postId);
+    return res.json(post);
+  }
 };

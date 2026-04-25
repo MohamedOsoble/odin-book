@@ -1,6 +1,5 @@
 const faker = require("@faker-js/faker").faker;
-const { DbNull } = require("@prisma/client/runtime/client");
-const { prisma } = require("./prisma");
+const prisma = require("./prisma").public;
 const axios = require("axios");
 
 function createUserData() {
@@ -67,4 +66,16 @@ async function getAllPosts() {
   return posts;
 }
 
-populatePost(15);
+async function createProfiles() {
+  const users = await allUsers();
+  for (const user of users) {
+    await prisma.profile.create({
+      data: {
+        bio: "Theres nothing here yet",
+        userId: user.id,
+      },
+    });
+  }
+}
+
+// createProfiles();

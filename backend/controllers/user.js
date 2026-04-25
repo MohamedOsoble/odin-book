@@ -40,15 +40,12 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = (req, res) => {
-  console.log("Logout called...");
   if (req.cookies["jwt"]) {
-    console.log("Clearing cookies...");
     return res.clearCookie("jwt").status(200).json({
       success: true,
       message: "You have logged out",
     });
   } else {
-    console.log("Logout failed...");
     return res.status(400).json({
       success: false,
       message: "Login session already expired",
@@ -57,9 +54,7 @@ exports.logout = (req, res) => {
 };
 
 exports.checkAuth = (req, res) => {
-  console.log("checking auth token...");
   if (req.user) {
-    console.log("Theres a user...");
     return res.status(200).json({
       user: {
         id: req.cookies["jwt"]["id"],
@@ -76,7 +71,6 @@ exports.register = [
   validate.register,
   async (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
       return res.status(200).json({ error: true, errors: errors.array() });
     }
@@ -97,7 +91,6 @@ exports.register = [
 ];
 
 exports.all = async () => {
-  console.log("All users called");
   const result = await db.all();
   return result;
 };

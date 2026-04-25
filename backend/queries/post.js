@@ -1,11 +1,10 @@
 const prisma = require("../lib/prisma").public;
 
-exports.create = async (authorId, content, isPublished) => {
+exports.create = async (authorId, content) => {
   const post = await prisma.post.create({
     data: {
       authorId: authorId,
       content: content,
-      published: isPublished,
     },
   });
   return post;
@@ -60,6 +59,14 @@ exports.postsByUser = async (userId) => {
     where: {
       authorId: userId,
     },
+    include: {
+      author: true,
+      _count: {
+        select: {
+          likedby: true,
+        },
+      },
+    },
   });
   return posts;
 };
@@ -67,20 +74,27 @@ exports.postsByUser = async (userId) => {
 // returns 15 most popular posts, omitting createdAt within 72h since the app itself wont have a lot of posts...
 exports.popular = async () => {
   const posts = await prisma.post.findMany({
-    where: {
-      published: true,
-      // createdAt: ""
+    include: {
+      author: { include: { profile: { include: { user: true } } } },
+      _count: {
+        select: {
+          likedby: true,
+        },
+      },
     },
-    orderBy: {
-      likes: "desc",
-    },
-    take: 15,
   });
   return posts;
 };
 
-exports.explore = async (userId) => {
+exports.postsByFollowing = async (userId) => {
   const posts = await prisma.post.findMany({
+    include: {
+      _count: {
+        select: {
+          likedby: true,
+        },
+      },
+    },
     where: {
       author: {
         followers: {
@@ -97,6 +111,13 @@ exports.explore = async (userId) => {
 exports.recent = async () => {
   const currDate = Date.now();
   const post = await prisma.post.findMany({
+    include: {
+      _count: {
+        select: {
+          likedby: true,
+        },
+      },
+    },
     where: {
       createdAt: {
         gte: new Date(currDate - 1000 * 60 * 60 * 72), // Within last 72 hours
@@ -107,4 +128,46 @@ exports.recent = async () => {
     },
   });
   return post;
+};
+
+exports.likePost = async (userId, postId) => {
+  const isConnected = await prisma.post.findFirst({
+    where: { id: postId, likedby: { some: { id: userId } } },
+  });
+
+  if (isConnected != null) {
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likedby: { disconnect: { id: userId } },
+      },
+      include: {
+        _count: {
+          select: {
+            likedby: true,
+          },
+        },
+      },
+    });
+    return updatedPost;
+  } else {
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likedby: { connect: { id: userId } },
+      },
+      include: {
+        _count: {
+          select: {
+            likedby: true,
+          },
+        },
+      },
+    });
+    return updatedPost;
+  }
 };

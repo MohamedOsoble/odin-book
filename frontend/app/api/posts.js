@@ -9,9 +9,50 @@ const options = {
   withCredentials: true, // Ensure Axios includes cookies in the request
 };
 
+// export async function like(userId, postId) {
+//   // input userid and postid, hit api to update like.
+//   const response = await axios
+//     .post(URL + postId + "/like", { postId, userId })
+//     .catch(function (err) {
+//       console.log(err);
+//       return err.response.data;
+//     });
+//   return response;
+// }
+
+export async function popular() {
+  const response = await axios
+    .get(URL + "popular", options)
+    .catch(function (err) {
+      console.log(err);
+      return err.response.data;
+    });
+  return response;
+}
+
 export async function explore() {
   const response = await axios
     .get(URL + "explore", options)
+    .catch(function (err) {
+      console.log(err);
+      return err.response.data;
+    });
+  return response;
+}
+
+export async function create(userId, content) {
+  const response = await axios
+    .post(URL + "create", { userId, content })
+    .catch(function (err) {
+      console.log(err);
+      return err.response.data;
+    });
+  return response;
+}
+
+export async function likePost(postId) {
+  const response = await axios
+    .get(URL + postId + "/like", options)
     .catch(function (err) {
       console.log(err);
       return err.response.data;

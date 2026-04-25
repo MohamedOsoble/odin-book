@@ -30,7 +30,6 @@ export async function logout() {
 }
 
 export async function register(user) {
-  console.log(user);
   const response = await axios
     .post(URL + "register", user, options)
     .catch(function (error) {

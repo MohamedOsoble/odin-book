@@ -1,6 +1,12 @@
 const posts = [
   {
     userId: 1,
+    id: 123,
+    title: "Placeholder posts...",
+    body: "There are no real posts made yet on the app so please see the filler posts below...",
+  },
+  {
+    userId: 1,
     id: 1,
     title:
       "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",

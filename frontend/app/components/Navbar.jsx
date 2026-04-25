@@ -5,7 +5,7 @@ export const Navbar = () => {
 
   const userNavLinks = [
     { name: "Home", href: "/" },
-    { name: "Profile", href: "/profile" },
+    { name: "Profile", href: "/profile/" + user.username },
     { name: "Posts", href: "/posts" },
     { name: "Messages", href: "/messages" },
     { name: "Logout", href: "/logout" },
@@ -28,7 +28,7 @@ export const Navbar = () => {
   return (
     <div className="w-full space-y-6 px-4 pb-12">
       <nav className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4">
-        <ul className="flex items-center space-x-12 md:pl-10">
+        <ul className="flex justify-items-center space-x-12 md:pl-10">
           {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
         </ul>
       </nav>

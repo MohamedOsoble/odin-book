@@ -57,7 +57,6 @@ passport.use(
       },
     });
     if (user) {
-      console.log("user found");
       return done(null, user);
     } else {
       return done(null, false);
