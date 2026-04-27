@@ -72,10 +72,13 @@ exports.recentPosts = async (req, res, next) => {
 
 exports.likePost = async (req, res, next) => {
   const userId = req.user;
+  console.log(userId);
   const postId = req.params.postid;
   console.log(postId);
   if (userId && postId) {
     const post = await db.likePost(userId, postId);
     return res.json(post);
+  } else {
+    return res.json({ error: "Invalid post ID or user not logged in" });
   }
 };

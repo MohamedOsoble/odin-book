@@ -44,13 +44,16 @@ model Post {
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  content   String
-  createdAt DateTime @default(now())
-  post      Post     @relation(fields: [postId], references: [id])
-  postId    String
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  id              String    @id @default(uuid())
+  content         String
+  createdAt       DateTime  @default(now())
+  post            Post      @relation(fields: [postId], references: [id])
+  postId          String
+  author          User      @relation(fields: [authorId], references: [id])
+  authorId        String
+  parentCommentId String?
+  parentComment   Comment?  @relation("ParentReplies", fields: [parentCommentId], references: [id])
+  replies         Comment[] @relation("ParentReplies")
 }
 
 model Follows {
