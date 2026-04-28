@@ -27,7 +27,7 @@ export default function createPost(user) {
 export function PostForm(user, content, setContent, errors, setErrors) {
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (content.length > 120) {
+    if (content.length > 150) {
       setErrors(true);
     } else {
       const response = await create(user.id, content);
@@ -48,7 +48,7 @@ export function PostForm(user, content, setContent, errors, setErrors) {
       <form onSubmit={handleSubmit}>
         <div class="flex flex-col">
           <textarea
-            class="bg-gray-800 border border-default-medium rounded-md text-heading 
+            class="border border-default-medium rounded-md text-heading 
             text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
             maxLength={150}
@@ -67,13 +67,13 @@ export function PostForm(user, content, setContent, errors, setErrors) {
           >
             <button
               onClick={handleSubmit}
-              class="bg-gray-800 border-1 rounded-sm w-25 p-1"
+              class="btn border-1 rounded-sm w-25 p-1"
               type="submit"
             >
               Post
             </button>
             <button
-              class="bg-gray-800 border-1 rounded-sm w-25 p-1 ml-10"
+              class="btn border-1 rounded-sm w-25 p-1 ml-10"
               type="reset"
               onClick={handleClear}
             >

@@ -31,26 +31,23 @@ export const links = () => [
 
 export function Layout({ children }) {
   return (
-    <html lang="en">
+    <html data-theme="black">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/daisyui@5"
+          rel="stylesheet"
+          type="text/css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <Meta />
         <Links />
       </head>
       <body>
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
-            <img
-              src={logoLight}
-              alt="React Router"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src={logoDark}
-              alt="React Router"
-              className="hidden w-full dark:block"
-            />
+            <h1>The Odin Book</h1>
           </div>
         </header>
         <div class="flex flex-col items-center">{children}</div>
