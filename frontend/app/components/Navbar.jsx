@@ -103,6 +103,7 @@ export const Navbar = () => {
             placeholder="Search"
             className="input input-bordered w-64 lg:w-auto"
           />
+          <ThemeController />
         </div>
       </div>
     </div>

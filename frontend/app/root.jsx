@@ -11,7 +11,6 @@ import axios from "axios";
 import { LoadingPage } from "./components/Loading";
 import { Navbar } from "./components/Navbar";
 import { UserProvider, useUser } from "./contexts/UserContexts";
-import ThemeController from "./components/ThemeController";
 import { ThemeProvider } from "./contexts/ThemeContexts";
 
 import "./app.css";
@@ -52,7 +51,6 @@ export function Layout({ children }) {
             <div className="w-[500px] max-w-[100vw] p-4">
               <h1>The Odin Book</h1>
             </div>
-            <ThemeController />
           </header>
           <div class="flex flex-col items-center">{children}</div>
           <ScrollRestoration />
