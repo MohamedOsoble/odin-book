@@ -1,4 +1,5 @@
 import { useUser } from "../contexts/UserContexts";
+import ThemeController from "./ThemeController";
 
 export const Navbar = () => {
   const { user } = useUser();
@@ -91,7 +92,7 @@ export const Navbar = () => {
               />
             </svg>
           </label>
-          <button className="btn btn-ghost text-xl">daisyUI</button>
+          <button className="btn btn-ghost text-xl">oBook</button>
         </div>
         <div className="navbar-center hidden lg:flex">
           {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
@@ -103,28 +104,6 @@ export const Navbar = () => {
             className="input input-bordered w-64 lg:w-auto"
           />
         </div>
-      </div>
-
-      <div className="collapse-content lg:hidden z-1">
-        <ul className="menu">
-          <li>
-            <button>Item 1</button>
-          </li>
-          <li>
-            <button>Parent</button>
-            <ul>
-              <li>
-                <button>Submenu 1</button>
-              </li>
-              <li>
-                <button>Submenu 2</button>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <button>Item 3</button>
-          </li>
-        </ul>
       </div>
     </div>
   );
