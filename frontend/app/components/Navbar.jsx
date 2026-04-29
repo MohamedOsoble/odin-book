@@ -37,7 +37,7 @@ export const Navbar = () => {
 
   function NavLinks(links) {
     return (
-      <ul className="menu menu-horizontal px-1">
+      <>
         {links.map((link) => {
           return (
             <li>
@@ -64,7 +64,7 @@ export const Navbar = () => {
             </li>
           );
         })}
-      </ul>
+      </>
     );
   }
   return (
@@ -95,7 +95,9 @@ export const Navbar = () => {
           <button className="btn btn-ghost text-xl">oBook</button>
         </div>
         <div className="navbar-center hidden lg:flex">
-          {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+          <ul className="menu menu-horizontal px-1">
+            {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+          </ul>
         </div>
         <div className="navbar-end">
           <input
@@ -105,6 +107,11 @@ export const Navbar = () => {
           />
           <ThemeController />
         </div>
+      </div>
+      <div className="collapse-content lg:hidden z-1">
+        <ul className="menu">
+          {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+        </ul>
       </div>
     </div>
   );

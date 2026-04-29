@@ -47,9 +47,9 @@ export function Layout({ children }) {
           <Links />
         </head>
         <body>
-          <header className="flex flex-row items-center gap-9">
+          <header className="flex flex-col place-items-center gap-9">
             <div className="w-[500px] max-w-[100vw] p-4">
-              <h1>The Odin Book</h1>
+              <h1 className="text-5xl font-mono font-bold">The Odin Book</h1>
             </div>
           </header>
           <div class="flex flex-col items-center">{children}</div>
