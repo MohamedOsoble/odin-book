@@ -56,8 +56,8 @@ export default function Register() {
     }, 1000);
 
     return (
-      <div class="max-w-sm mx-auto pb-7">
-        <h1 class="text-3xl">Registration Successful...</h1>
+      <div className="max-w-sm mx-auto pb-7">
+        <h1 className="text-3xl">Registration Successful...</h1>
         <br />
         <p>Redirecting to login...</p>
       </div>
@@ -66,8 +66,10 @@ export default function Register() {
 
   const Failure = () => {
     return (
-      <div class="max-w-sm mx-auto pb-7">
-        <h1 class="text-3xl">Registration failed for an unknown reason...</h1>
+      <div className="max-w-sm mx-auto pb-7">
+        <h1 className="text-3xl">
+          Registration failed for an unknown reason...
+        </h1>
         <br />
         <p>Please try again by refreshing the page and registering again.</p>
       </div>
@@ -76,15 +78,15 @@ export default function Register() {
 
   const RegistrationForm = () => {
     return (
-      <div class="flex-col">
-        <div class="max-w-sm mx-auto pb-7">
-          <h1 class="text-3xl">Register</h1>
+      <div className="flex-col">
+        <div className="max-w-sm mx-auto pb-7">
+          <h1 className="text-3xl">Register</h1>
         </div>
-        <form class="max-w-sm mx-auto" onSubmit={handleSubmit}>
-          <div class="mb-5">
+        <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
+          <div className="mb-5">
             <label
               for="username"
-              class="block mb-2.5 text-sm font-medium text-heading"
+              className="block mb-2.5 text-sm font-medium text-heading"
             >
               Your username
             </label>
@@ -92,7 +94,7 @@ export default function Register() {
               type="text"
               id="username"
               name="username"
-              class="bg-neutral-secondary-medium border border-default-medium
+              className="bg-neutral-secondary-medium border border-default-medium
             text-heading text-sm rounded-base focus:ring-brand focus:border-brand
             block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
               placeholder="TheOdin29"
@@ -101,15 +103,15 @@ export default function Register() {
               required
             />
             {formErrors.username ? (
-              <p class="text-m text-red-500 flex items-center mt-2">
+              <p className="text-m text-red-500 flex items-center mt-2">
                 {formErrors.username}
               </p>
             ) : null}
           </div>
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="email"
-              class="block mb-2.5 text-sm font-medium text-heading"
+              className="block mb-2.5 text-sm font-medium text-heading"
             >
               Your email
             </label>
@@ -117,7 +119,7 @@ export default function Register() {
               type="email"
               id="email"
               name="email"
-              class="bg-neutral-secondary-medium border border-default-medium
+              className="bg-neutral-secondary-medium border border-default-medium
             text-heading text-sm rounded-base focus:ring-brand focus:border-brand
             block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
               placeholder="someone@example.com"
@@ -126,15 +128,15 @@ export default function Register() {
               required
             />
             {formErrors.email ? (
-              <p class="text-m text-red-500 flex items-center mt-2">
+              <p className="text-m text-red-500 flex items-center mt-2">
                 {formErrors.email}
               </p>
             ) : null}
           </div>
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="password"
-              class="block mb-2.5 text-sm font-medium text-heading"
+              className="block mb-2.5 text-sm font-medium text-heading"
             >
               Your password
             </label>
@@ -142,7 +144,7 @@ export default function Register() {
               type="password"
               name="password"
               id="password"
-              class="bg-neutral-secondary-medium border border-default-medium
+              className="bg-neutral-secondary-medium border border-default-medium
             text-heading text-sm rounded-base focus:ring-brand focus:border-brand
             block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
               placeholder="••••••••"
@@ -151,15 +153,15 @@ export default function Register() {
               required
             />
             {formErrors.password ? (
-              <p class="text-m text-red-500 flex items-center mt-2">
+              <p className="text-m text-red-500 flex items-center mt-2">
                 {formErrors.password}
               </p>
             ) : null}
           </div>
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="passwordConfirmation"
-              class="block mb-2.5 text-sm font-medium text-heading"
+              className="block mb-2.5 text-sm font-medium text-heading"
             >
               Confirm password
             </label>
@@ -167,7 +169,7 @@ export default function Register() {
               type="password"
               name="passwordConfirmation"
               id="passwordConfirmation"
-              class="bg-neutral-secondary-medium border border-default-medium
+              className="bg-neutral-secondary-medium border border-default-medium
             text-heading text-sm rounded-base focus:ring-brand focus:border-brand
             block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
               placeholder="••••••••"
@@ -176,14 +178,14 @@ export default function Register() {
               required
             />
             {formErrors.passwordConfirmation ? (
-              <p class="text-m text-red-500 flex items-center mt-2">
+              <p className="text-m text-red-500 flex items-center mt-2">
                 {formErrors.passwordConfirmation}
               </p>
             ) : null}
           </div>
           <button
             type="submit"
-            class="text-white bg-brand box-border border border-white rounded-md
+            className="text-white bg-brand box-border border border-white rounded-md
           hover:dark:bg-gray-950 focus:ring-4 focus:ring-brand-medium shadow-xs
           font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none"
           >

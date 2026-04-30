@@ -37,12 +37,12 @@ export function Layout({ children }) {
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link
+          {/* <link
             href="https://cdn.jsdelivr.net/npm/daisyui@5"
             rel="stylesheet"
             type="text/css"
           />
-          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> */}
           <Meta />
           <Links />
         </head>
@@ -52,7 +52,7 @@ export function Layout({ children }) {
               <h1 className="text-5xl font-mono font-bold">The Odin Book</h1>
             </div>
           </header>
-          <div class="flex flex-col items-center">{children}</div>
+          <div className="flex flex-col items-center">{children}</div>
           <ScrollRestoration />
           <Scripts />
         </body>

@@ -23,7 +23,10 @@ export default function Post(post, author) {
     console.log("Supposed to open a popup to allow post sharing...");
   };
   return (
-    <div className="flex flex-col rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 m-5 justify-between">
+    <div
+      className="flex flex-col rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 m-5 justify-between"
+      key={post.id}
+    >
       <div className="min-w-xl mt-10 ">
         <a
           href={"/profile/" + author.username}

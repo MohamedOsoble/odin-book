@@ -41,10 +41,10 @@ export default function Login() {
   };
 
   return (
-    <div class="flex-col">
-      <div class="max-w-sm mx-auto pb-7"></div>
-      <form class="max-w-sm mx-auto" onSubmit={handleSubmit}>
-        <div class="mb-5">
+    <div className="flex-col">
+      <div className="max-w-sm mx-auto pb-7"></div>
+      <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
+        <div className="mb-5">
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <legend className="fieldset-legend">Login</legend>
 

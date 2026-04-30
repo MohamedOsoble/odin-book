@@ -11,7 +11,7 @@ export const Navbar = () => {
       name: "Posts",
       href: "/posts",
       sublinks: [
-        { name: "Explore", href: "/explore" },
+        { name: "Following", href: "/following" },
         { name: "Popular", href: "/popular" },
         { name: "Recent", href: "/recent" },
       ],
@@ -26,7 +26,6 @@ export const Navbar = () => {
       name: "Posts",
       href: "/posts",
       sublinks: [
-        { name: "Explore", href: "/explore" },
         { name: "Popular", href: "/popular" },
         { name: "Recent", href: "/recent" },
       ],
@@ -40,15 +39,18 @@ export const Navbar = () => {
       <>
         {links.map((link) => {
           return (
-            <li>
+            <li key={link.name}>
               {link.sublinks.length > 0 ? (
                 <details>
                   <summary>{link.name}</summary>
                   <ul className="p-2 bg-base-100 w-40 z-1">
                     {link.sublinks.map((sublink) => {
                       return (
-                        <li>
-                          <a href={link.href + "/" + sublink.name}>
+                        <li key={sublink.name}>
+                          <a
+                            href={link.href + "/" + sublink.name}
+                            key={sublink.name}
+                          >
                             {sublink.name}
                           </a>
                         </li>

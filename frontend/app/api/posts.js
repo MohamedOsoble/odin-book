@@ -30,9 +30,19 @@ export async function popular() {
   return response;
 }
 
-export async function explore() {
+export async function following() {
   const response = await axios
-    .get(URL + "explore", options)
+    .get(URL + "following", options)
+    .catch(function (err) {
+      console.log(err);
+      return err.response.data;
+    });
+  return response;
+}
+
+export async function recent() {
+  const response = await axios
+    .get(URL + "recent", options)
     .catch(function (err) {
       console.log(err);
       return err.response.data;

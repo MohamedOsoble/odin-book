@@ -46,9 +46,9 @@ export function PostForm(user, content, setContent, errors, setErrors) {
     <div className="flex flex-col">
       <h2 className="pb-2 underline">Create new post: </h2>
       <form onSubmit={handleSubmit}>
-        <div class="flex flex-col">
+        <div className="flex flex-col">
           <textarea
-            class="border border-default-medium rounded-md text-heading 
+            className="border border-default-medium rounded-md text-heading 
             text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
             maxLength={150}
@@ -62,18 +62,18 @@ export function PostForm(user, content, setContent, errors, setErrors) {
             </p>
           ) : null}
           <div
-            class="flex flex-row justify-center
+            className="flex flex-row justify-center
           width-inherit p-5"
           >
             <button
               onClick={handleSubmit}
-              class="btn border-1 rounded-sm w-25 p-1"
+              className="btn border-1 rounded-sm w-25 p-1"
               type="submit"
             >
               Post
             </button>
             <button
-              class="btn border-1 rounded-sm w-25 p-1 ml-10"
+              className="btn border-1 rounded-sm w-25 p-1 ml-10"
               type="reset"
               onClick={handleClear}
             >

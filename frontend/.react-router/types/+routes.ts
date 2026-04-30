@@ -26,6 +26,15 @@ type Pages = {
   "/posts": {
     params: {};
   };
+  "/posts/posts/following": {
+    params: {};
+  };
+  "/posts/posts/popular": {
+    params: {};
+  };
+  "/posts/posts/recent": {
+    params: {};
+  };
   "/profile/:username": {
     params: {
       "username": string;
@@ -36,7 +45,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/login" | "/logout" | "/register" | "/posts" | "/profile/:username";
+    page: "/" | "/login" | "/logout" | "/register" | "/posts" | "/posts/posts/following" | "/posts/posts/popular" | "/posts/posts/recent" | "/profile/:username";
   };
   "routes/home/home.jsx": {
     id: "routes/home/home";
@@ -54,9 +63,21 @@ type RouteFiles = {
     id: "routes/register/register";
     page: "/register";
   };
-  "routes/posts/explore.jsx": {
-    id: "routes/posts/explore";
-    page: "/posts";
+  "routes/posts/posts.jsx": {
+    id: "routes/posts/posts";
+    page: "/posts" | "/posts/posts/following" | "/posts/posts/popular" | "/posts/posts/recent";
+  };
+  "routes/posts/following.jsx": {
+    id: "routes/posts/following";
+    page: "/posts/posts/following";
+  };
+  "routes/posts/popular.jsx": {
+    id: "routes/posts/popular";
+    page: "/posts/posts/popular";
+  };
+  "routes/posts/recent.jsx": {
+    id: "routes/posts/recent";
+    page: "/posts/posts/recent";
   };
   "routes/profile/profile.jsx": {
     id: "routes/profile/profile";
@@ -70,6 +91,9 @@ type RouteModules = {
   "routes/login/login": typeof import("./app/routes/login/login.jsx");
   "routes/login/logout": typeof import("./app/routes/login/logout.jsx");
   "routes/register/register": typeof import("./app/routes/register/register.jsx");
-  "routes/posts/explore": typeof import("./app/routes/posts/explore.jsx");
+  "routes/posts/posts": typeof import("./app/routes/posts/posts.jsx");
+  "routes/posts/following": typeof import("./app/routes/posts/following.jsx");
+  "routes/posts/popular": typeof import("./app/routes/posts/popular.jsx");
+  "routes/posts/recent": typeof import("./app/routes/posts/recent.jsx");
   "routes/profile/profile": typeof import("./app/routes/profile/profile.jsx");
 };
