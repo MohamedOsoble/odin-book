@@ -8,12 +8,12 @@ export const Navbar = () => {
     { name: "Home", href: "/", sublinks: [] },
     { name: "Profile", href: "/profile/" + user.username, sublinks: [] },
     {
-      name: "Posts",
+      name: "Explore",
       href: "/posts",
       sublinks: [
-        { name: "Following", href: "/following" },
-        { name: "Popular", href: "/popular" },
-        { name: "Recent", href: "/recent" },
+        { name: "Following", href: "/posts/following" },
+        { name: "Recent", href: "/posts/recent" },
+        { name: "Popular", href: "/" },
       ],
     },
     { name: "Messages", href: "/messages", sublinks: [] },
@@ -23,11 +23,11 @@ export const Navbar = () => {
   const guestNavLinks = [
     { name: "Home", href: "/", sublinks: [] },
     {
-      name: "Posts",
+      name: "Explore",
       href: "/posts",
       sublinks: [
-        { name: "Popular", href: "/popular" },
-        { name: "Recent", href: "/recent" },
+        { name: "Popular", href: "/" },
+        { name: "Recent", href: "/posts/recent" },
       ],
     },
     { name: "Register", href: "/register", sublinks: [] },
@@ -47,10 +47,7 @@ export const Navbar = () => {
                     {link.sublinks.map((sublink) => {
                       return (
                         <li key={sublink.name}>
-                          <a
-                            href={link.href + "/" + sublink.name}
-                            key={sublink.name}
-                          >
+                          <a href={sublink.href} key={sublink.name}>
                             {sublink.name}
                           </a>
                         </li>

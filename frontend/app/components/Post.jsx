@@ -40,38 +40,44 @@ export default function Post(post, author) {
         </a>
       </div>
       <p>{post.content}</p>
-      <div className="flex">
-        <button
-          className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-          type="submit"
-          onClick={handleLike}
-        >
-          Like
-        </button>
-        <button
-          className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-          type="submit"
-          onClick={handleComment}
-        >
-          Comment
-        </button>
-        <button
-          className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-          type="submit"
-          onClick={handleShare}
-        >
-          Share
-        </button>
-        {user.id === author.id ? (
+      {user ? (
+        <div className="flex">
           <button
-            className="text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+            className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
             type="submit"
-            onClick={handleDelete}
+            onClick={handleLike}
           >
-            Delete
+            Like
           </button>
-        ) : null}
-      </div>
+          <button
+            className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+            type="submit"
+            onClick={handleComment}
+          >
+            Comment
+          </button>
+          <button
+            className="rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+            type="submit"
+            onClick={handleShare}
+          >
+            Share
+          </button>
+          {user.id === author.id ? (
+            <button
+              className="text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+              type="submit"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          ) : null}
+        </div>
+      ) : (
+        <p className="text-xs text-gray-500">
+          Please <a href="/login">Login</a> to like or comment on this post
+        </p>
+      )}
 
       <p className="text-xs text-gray-500">Likes: {likes}</p>
       <p className="text-xs text-gray-500">

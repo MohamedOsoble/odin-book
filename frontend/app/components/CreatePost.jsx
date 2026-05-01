@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { create } from "../api/posts";
+import { useNavigate } from "react-router";
 
 export default function createPost(user) {
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState(false);
+  const navigate = useNavigate();
+
+  const refreshPage = () => {
+    navigate(0);
+  };
   if (user) {
-    return PostForm(user, content, setContent, errors, setErrors);
+    return PostForm(user, content, setContent, errors, setErrors, refreshPage);
   } else {
     return (
       <div>
@@ -24,14 +30,21 @@ export default function createPost(user) {
   }
 }
 
-export function PostForm(user, content, setContent, errors, setErrors) {
+export function PostForm(
+  user,
+  content,
+  setContent,
+  errors,
+  setErrors,
+  refreshPage,
+) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (content.length > 150) {
       setErrors(true);
     } else {
       const response = await create(user.id, content);
-      event.target.reset();
+      refreshPage();
     }
   };
 

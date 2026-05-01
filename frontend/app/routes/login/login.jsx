@@ -16,7 +16,7 @@ export default function Login() {
   }, [user]);
 
   const redirectUser = () => {
-    navigate("/posts");
+    navigate("/");
   };
 
   const handleChange = (event) => {
