@@ -20,6 +20,11 @@ type Pages = {
   "/posts/recent": {
     params: {};
   };
+  "/post/:postId": {
+    params: {
+      "postId": string;
+    };
+  };
   "/login": {
     params: {};
   };
@@ -39,23 +44,27 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/posts/following" | "/posts/recent" | "/login" | "/logout" | "/register" | "/profile/:username";
+    page: "/" | "/posts/following" | "/posts/recent" | "/post/:postId" | "/login" | "/logout" | "/register" | "/profile/:username";
   };
   "routes/posts/posts.jsx": {
     id: "routes/posts/posts";
     page: "/" | "/posts/following" | "/posts/recent";
   };
-  "routes/posts/following.jsx": {
-    id: "routes/posts/following";
-    page: "/posts/following";
-  };
   "routes/posts/popular.jsx": {
     id: "routes/posts/popular";
     page: "/";
   };
+  "routes/posts/following.jsx": {
+    id: "routes/posts/following";
+    page: "/posts/following";
+  };
   "routes/posts/recent.jsx": {
     id: "routes/posts/recent";
     page: "/posts/recent";
+  };
+  "routes/posts/viewpost.jsx": {
+    id: "routes/posts/viewpost";
+    page: "/post/:postId";
   };
   "routes/login/login.jsx": {
     id: "routes/login/login";
@@ -78,9 +87,10 @@ type RouteFiles = {
 type RouteModules = {
   "root": typeof import("./app/root.jsx");
   "routes/posts/posts": typeof import("./app/routes/posts/posts.jsx");
-  "routes/posts/following": typeof import("./app/routes/posts/following.jsx");
   "routes/posts/popular": typeof import("./app/routes/posts/popular.jsx");
+  "routes/posts/following": typeof import("./app/routes/posts/following.jsx");
   "routes/posts/recent": typeof import("./app/routes/posts/recent.jsx");
+  "routes/posts/viewpost": typeof import("./app/routes/posts/viewpost.jsx");
   "routes/login/login": typeof import("./app/routes/login/login.jsx");
   "routes/login/logout": typeof import("./app/routes/login/logout.jsx");
   "routes/register/register": typeof import("./app/routes/register/register.jsx");

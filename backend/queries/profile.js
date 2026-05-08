@@ -31,9 +31,43 @@ exports.updateProfile = async (profile) => {
     data: {
       name: profile.name,
       bio: profile.bio,
-      dob: profile.dob,
+      dob: new Date(profile.dob),
       avatar: profile.avatar,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          email: true,
+          followers: true,
+          following: true,
+          comments: true,
+          profile: true,
+          postsCreated: {
+            include: { author: true, _count: { select: { likedby: true } } },
+          },
+        },
+      },
     },
   });
   return updatedProfile;
+};
+
+exports.updateAvatar = async (userId, avatarUrl) => {
+  const updatedProfile = await prisma.profile.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      avatar: avatarUrl,
+    },
+  });
+  return updatedProfile;
+};
+
+exports.getAvatar = async (userId) => {
+  const profile = await prisma.profile.findUnique({
+    where: { userId: userId },
+  });
+  return profile;
 };

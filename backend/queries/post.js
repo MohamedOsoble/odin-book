@@ -27,6 +27,7 @@ exports.getPost = async (postId) => {
     },
     include: {
       comments: true,
+      likedby: true,
     },
   });
   return post;
@@ -112,6 +113,7 @@ exports.recent = async () => {
   const currDate = Date.now();
   const post = await prisma.post.findMany({
     include: {
+      author: { include: { profile: { include: { user: true } } } },
       _count: {
         select: {
           likedby: true,

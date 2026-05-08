@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:3000/posts/";
+const URL = `${import.meta.env.VITE_API}posts/`;
 const options = {
   method: "POST",
   headers: {
@@ -67,5 +67,15 @@ export async function likePost(postId) {
       console.log(err);
       return err.response.data;
     });
+  return response;
+}
+
+export async function getPost(postId) {
+  const address = URL + "post/" + postId;
+  console.log(address);
+  const response = await axios.get(address, options).catch(function (err) {
+    console.log(err);
+    return err.response.data;
+  });
   return response;
 }

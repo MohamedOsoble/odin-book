@@ -2,6 +2,7 @@ const express = require("express");
 const routes = require("./routes");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const path = require("node:path");
 
 require("./lib/passport.js");
 
@@ -37,6 +38,9 @@ const PORT = 3000;
 app.use("/user", routes.user);
 app.use("/posts", routes.post);
 app.use("/profile", routes.profile);
+app.use("/public/uploads/:filename", (req, res, next) => {
+  res.sendFile(__dirname + "/public/uploads/" + req.params.filename);
+});
 app.listen(PORT, (error) => {
   if (error) {
     throw error;

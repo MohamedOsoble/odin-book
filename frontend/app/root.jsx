@@ -14,9 +14,6 @@ import { UserProvider, useUser } from "./contexts/UserContexts";
 import { ThemeProvider } from "./contexts/ThemeContexts";
 
 import "./app.css";
-import logoDark from "../public/logo2-dark.svg";
-import logoLight from "../public/logo2-light.svg";
-
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -37,12 +34,6 @@ export function Layout({ children }) {
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          {/* <link
-            href="https://cdn.jsdelivr.net/npm/daisyui@5"
-            rel="stylesheet"
-            type="text/css"
-          />
-          <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> */}
           <Meta />
           <Links />
         </head>

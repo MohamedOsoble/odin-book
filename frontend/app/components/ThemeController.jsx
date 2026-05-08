@@ -3,9 +3,9 @@ import { useTheme } from "../contexts/ThemeContexts";
 
 export default function ThemeController(Theme) {
   const { changeTheme, theme } = useTheme();
-  const handleClick = (event) => {
-    changeTheme(event.target.value);
-    localStorage.setItem("theme", event.target.value);
+  const handleClick = (e) => {
+    changeTheme(e.target.value);
+    localStorage.setItem("theme", e.target.value);
     const parent = document.getElementById("theme-dropdown");
     parent.removeAttribute("open");
   };

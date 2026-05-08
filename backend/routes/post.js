@@ -13,8 +13,8 @@ router.get("/popular", controller.popularPosts);
 router.get("/recent", controller.recentPosts);
 
 router
-  .route("/:postid")
-  .get(controller.getPost)
+  .route("/post/:postid")
+.get(controller.getPost)
   .put(controller.updatePost)
   .delete(controller.deletePost);
 

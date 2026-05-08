@@ -6,6 +6,7 @@ export default [
     route("/posts/following", "routes/posts/following.jsx"),
     route("/posts/recent", "routes/posts/recent.jsx"),
   ]),
+  route("/post/:postId", "routes/posts/viewpost.jsx"),
   route("/login", "routes/login/login.jsx"),
   route("/logout", "routes/login/logout.jsx"),
   route("/register", "routes/register/register.jsx"),

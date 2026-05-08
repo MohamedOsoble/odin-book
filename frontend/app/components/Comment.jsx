@@ -1,64 +1,41 @@
-import { useState } from "react";
-import { create } from "../api/posts";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 
-export default function createPost(user) {
+export function CreateComment({ postId, setCommenting }) {
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState(false);
   const navigate = useNavigate();
 
-  const refreshPage = () => {
-    navigate(0);
-  };
-  if (user) {
-    return PostForm(user, content, setContent, errors, setErrors, refreshPage);
-  } else {
-    return (
-      <div>
-        <p className="text-gray-400">
-          Want to create a post? Please{" "}
-          <a className="underline" href="/register">
-            Register
-          </a>{" "}
-          or{" "}
-          <a className="underline" href="/login">
-            Login
-          </a>
-        </p>
-      </div>
-    );
-  }
+  const handleChange = (e) => {};
+  return (
+    <CommentBox
+      content={content}
+      setContent={setContent}
+      errors={errors}
+      setErrors={setErrors}
+    />
+  );
 }
 
-export function PostForm(
-  user,
+export function CommentBox({
   content,
   setContent,
+  setCommenting,
   errors,
   setErrors,
-  refreshPage,
-) {
-  const handleSubmit = async (e) => {
+}) {
+  const handleSubmit = (e) => {
     e.preDefault();
-    if (content.length > 150) {
+    if (content.length > 120) {
       setErrors(true);
-    } else {
-      const response = await create(user.id, content);
-      refreshPage();
+      return;
     }
-  };
-
-  const handleClear = (e) => {
-    setContent("");
-  };
-
-  const handleChange = (e) => {
-    setContent(e.target.value);
+    console.log(content);
   };
 
   return (
     <div className="flex flex-col">
-      <h2 className="pb-2 underline">Create new post: </h2>
+      <h2 className="pb-2 underline">Reply:</h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col">
           <textarea
@@ -67,12 +44,15 @@ export function PostForm(
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
             maxLength={150}
             rows={4}
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
             placeholder="What's on your mind..."
-            onChange={handleChange}
           />
           {errors ? (
             <p className=" w-inherit justify-self-center">
-              Post content is too long
+              Comment is too long
             </p>
           ) : null}
           <div
@@ -84,14 +64,25 @@ export function PostForm(
               className="btn border-1 rounded-sm w-25 p-1"
               type="submit"
             >
-              Post
+              Send
             </button>
             <button
               className="btn border-1 rounded-sm w-25 p-1 ml-10"
               type="reset"
-              onClick={handleClear}
+              onClick={() => {
+                setContent("");
+              }}
             >
               Clear
+            </button>
+            <button
+              className="btn border-1 rounded-sm w-25 p-1 ml-10"
+              type="button"
+              onClick={() => {
+                setCommenting(false);
+              }}
+            >
+              Cancel
             </button>
           </div>
         </div>
@@ -99,3 +90,5 @@ export function PostForm(
     </div>
   );
 }
+export function replyComment({ postId }) {}
+export default function CommentSection({ postId }) {}

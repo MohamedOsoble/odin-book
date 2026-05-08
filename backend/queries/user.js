@@ -24,6 +24,9 @@ exports.newUser = async (username, email, password) => {
 exports.getUser = async (username) => {
   const user = await prisma.user.findFirst({
     where: { username: username },
+    include: {
+      profile: true,
+    },
   });
   return user;
 };

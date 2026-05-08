@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:3000/user/";
+const URL = `${import.meta.env.VITE_API}user/`;
 const options = {
   method: "POST",
   headers: {
