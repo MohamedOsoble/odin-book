@@ -24,8 +24,8 @@ const JWTOptions = {
 passport.use(
   new LocalStrategy(async function verifyCallback(username, password, done) {
     try {
-      const user = await DbPrivate.user.findUnique({
-        where: { username: username },
+      const user = await DbPrivate.user.findFirst({
+        where: { username: { equals: username, mode: "insensitive" } },
       });
       if (!user) {
         return done(null, false);
