@@ -27,6 +27,7 @@ export async function updateProfile(username, profile) {
         return err.response;
       }
     });
+  console.log(response);
   return response.data;
 }
 

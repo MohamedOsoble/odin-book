@@ -72,9 +72,17 @@ export async function likePost(postId) {
 
 export async function getPost(postId) {
   const address = URL + "post/" + postId;
-  console.log(address);
   const response = await axios.get(address, options).catch(function (err) {
     console.log(err);
+    return err.response.data;
+  });
+  return response;
+}
+
+export async function submitComment(data) {
+  const address = URL + "post/" + data.postId + "/comment";
+  const response = await axios.post(address, data).catch(function (err) {
+    console.error(err);
     return err.response.data;
   });
   return response;

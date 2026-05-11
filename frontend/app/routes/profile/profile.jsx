@@ -9,18 +9,22 @@ export async function clientLoader({ params }) {
   return profileData;
 }
 
-function loadPosts(posts, profile) {
+function LoadPosts(props) {
+  const { profile, posts } = props;
+  const author = {
+    id: profile.userId,
+    username: profile.user.username,
+    avatar: profile.avatar,
+  };
+
+  console.log(posts);
   if (posts.length < 1) {
     return <h1>There are no posts</h1>;
   } else {
     return (
       <div>
         {posts.map((post) => {
-          return Post(post, {
-            id: profile.userId,
-            username: profile.user.username,
-            avatar: profile.avatar,
-          });
+          return <Post post={post} author={author} />;
         })}
       </div>
     );
@@ -44,7 +48,7 @@ function loadLikes(likes) {
 }
 
 // This is going to take more work, fix edit profile first and move this to another file, combine image uploads in general...
-function UploadAvatar({ username, setChangeAvatar }) {
+function UploadAvatar({ username, setChangeAvatar, profile, setProfile }) {
   const verifyFileType = (file) => {
     const arr = file.type.split("/");
     return arr[0] === "image";
@@ -60,6 +64,8 @@ function UploadAvatar({ username, setChangeAvatar }) {
     } else {
       const form = new FormData(e.target);
       const response = await API.uploadAvatar(username, form);
+      setProfile({ ...profile, avatar: response.avatar });
+      setChangeAvatar(false);
       return response;
     }
   };
@@ -84,17 +90,14 @@ function UploadAvatar({ username, setChangeAvatar }) {
   );
 }
 
-export function loadAvatar(profile) {}
-
 function ProfileCard({ profile, setEditing }) {
-  console.log(profile);
   return (
     <div className="max-w-xl min-w-2xl flex-col justify-items-center border-2 border-solid rounded-md">
       <div className="flex flex-row min-w-xl mt-10 ">
         <div className="flex flex-col">
           {" "}
           <img
-            src={"http://localhost:3000/" + profile.avatar}
+            src={`${import.meta.env.VITE_API}${profile.avatar}`}
             className="rounded-4xl w-35 object-scale-down"
           ></img>{" "}
           <button className="btn" onClick={() => setEditing(true)}>
@@ -140,13 +143,7 @@ function ProfileCard({ profile, setEditing }) {
 }
 
 function EditProfile({ profile, setProfile, setEditing }) {
-  const [details, setDetails] = useState({
-    profileId: profile.profileId,
-    name: profile.name,
-    bio: profile.bio,
-    dob: profile.dob,
-    avatar: profile.avatar,
-  });
+  const [details, setDetails] = useState(profile);
   const [changeAvatar, setChangeAvatar] = useState(false);
 
   const handleChange = (e) => {
@@ -157,7 +154,6 @@ function EditProfile({ profile, setProfile, setEditing }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await API.updateProfile(profile.user.username, details);
-    console.log(response);
     setEditing(false);
     setProfile(response);
   };
@@ -166,12 +162,14 @@ function EditProfile({ profile, setProfile, setEditing }) {
     <div className="p-5 max-w-xl min-w-2xl flex flex-row justify-items-center border-2 border-solid rounded-md">
       <div className="flex flex-col p-5">
         <img
-          src={"http://localhost:3000/" + profile.avatar}
+          src={`${import.meta.env.VITE_API}${profile.avatar}`}
           className="rounded-4xl w-35 object-scale-down"
         ></img>{" "}
         {changeAvatar ? (
           <UploadAvatar
             username={profile.user.username}
+            profile={profile}
+            setProfile={setProfile}
             setChangeAvatar={setChangeAvatar}
           />
         ) : (
@@ -217,7 +215,7 @@ function EditProfile({ profile, setProfile, setEditing }) {
             name="dob"
             type="date"
             placeholder={profile.dob}
-            value={details.dob ? dateToInput(details.dob) : ""}
+            value={details.dob ? details.dob : ""}
             onChange={handleChange}
           />
         </div>
@@ -263,9 +261,9 @@ function Tab(profile) {
           Likes
         </button>
       </div>
-      {selected === "Posts"
-        ? loadPosts(profile.user.postsCreated, profile)
-        : null}
+      {selected === "Posts" ? (
+        <LoadPosts profile={profile} posts={profile.user.postsCreated} />
+      ) : null}
       {selected === "Comments" ? loadComments(profile.user.comments) : null}
       {selected === "Likes" ? loadLikes(profile.user.likes) : null}
     </div>

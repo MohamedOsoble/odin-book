@@ -13,11 +13,12 @@ export default function Popular({ loaderData }) {
       {loaderData.length > 1 ? (
         <div>
           {loaderData.map((post) => {
-            return Post(post, {
+            const author = {
               id: post.author.id,
               username: post.author.username,
               avatar: post.author.profile.avatar,
-            });
+            };
+            return <Post post={post} author={author} />;
           })}
         </div>
       ) : (

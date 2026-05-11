@@ -39,7 +39,7 @@ export function PostForm(
   refreshPage,
 ) {
   const handleSubmit = async (e) => {
-    e.preDefault();
+    e.preventDefault();
     if (content.length > 150) {
       setErrors(true);
     } else {
