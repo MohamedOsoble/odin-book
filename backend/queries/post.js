@@ -51,7 +51,7 @@ exports.updatePost = async (postId, content, isPublished) => {
 
 exports.deletePost = async (postId) => {
   const post = await prisma.post.delete({
-    select: {
+    where: {
       id: postId,
     },
   });

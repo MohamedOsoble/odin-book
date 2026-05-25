@@ -1,7 +1,7 @@
 import { useUser } from "../contexts/UserContexts";
 import { CreateComment } from "./Comment";
 import { useState } from "react";
-import { likePost } from "../api/posts";
+import { likePost, deletePost } from "../api/posts";
 
 const API = `${import.meta.env.VITE_API}`;
 
@@ -17,8 +17,9 @@ export default function Post({ post, author }) {
     setLikes(response.data.likedby.length);
   };
 
-  const handleDelete = (e) => {
-    console.log("Deleting post...");
+  const handleDelete = async (e) => {
+    const response = await deletePost(post.id);
+    console.log(response);
   };
 
   const handleComment = (e) => {
@@ -76,13 +77,44 @@ export default function Post({ post, author }) {
               Share
             </button>
             {user.id === author.id ? (
-              <button
-                className="btn text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-                type="submit"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
+              <>
+                <button
+                  className="btn text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+                  onClick={() =>
+                    document.getElementById("delete_modal").showModal()
+                  }
+                >
+                  Delete
+                </button>
+                <dialog id="delete_modal" class="modal">
+                  <div class="modal-box">
+                    <h3 class="text-lg font-bold">Delete Post?</h3>
+                    <p class="py-4">
+                      Please note that this action cannot be undone.
+                    </p>
+                    <div class="modal-action">
+                      <form method="dialog">
+                        <button
+                          className="btn text-green-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+                          type="submit"
+                          onClick={() =>
+                            document.getElementById("delete_modal").close()
+                          }
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="btn text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
+                          type="submit"
+                          onClick={handleDelete}
+                        >
+                          Delete Post
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
+              </>
             ) : null}
           </div>
         ) : (

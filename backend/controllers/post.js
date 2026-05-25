@@ -21,10 +21,28 @@ exports.updatePost = async (req, res, next) => {
   return res.json(post);
 };
 
-exports.deletePost = async (req, res, next) => {
-  const postId = req.params.postid;
+const deletePost = async (postId) => {
   const post = await postDb.deletePost(postId);
-  return res.json(post);
+  return post;
+};
+
+exports.deletePostRequest = async (req, res, next) => {
+  const userId = req.user.id;
+  const postId = req.params.postid;
+  const post = await postDb.getPost(postId);
+  if (post.author.id === userId) {
+    try {
+      const post = await deletePost(postId);
+      return res.json(post);
+    } catch (err) {
+      console.log(err);
+      return res.json(err);
+    }
+  } else {
+    return res.status(400).json({
+      msg: "You are not authorized to delete this post",
+    });
+  }
 };
 
 exports.createPost = [

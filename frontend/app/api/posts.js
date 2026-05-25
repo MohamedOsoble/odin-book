@@ -87,3 +87,12 @@ export async function submitComment(data) {
   });
   return response;
 }
+
+export async function deletePost(postId) {
+  const address = URL + "post/" + postId;
+  const response = await axios.delete(address, options).catch(function (err) {
+    console.log(err);
+    return err.response.data;
+  });
+  return response;
+}

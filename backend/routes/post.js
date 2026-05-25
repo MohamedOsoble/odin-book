@@ -1,6 +1,8 @@
 const { Router } = require("express");
+const passport = require("passport");
 const controller = require("../controllers/post");
 const isUser = require("../middleware/user").isUser;
+const auth = passport.authenticate("jwt", { session: false });
 
 const router = Router();
 
@@ -18,7 +20,7 @@ router
   .route("/post/:postid")
   .get(controller.getPost)
   .put(controller.updatePost)
-  .delete(controller.deletePost);
+  .delete(auth, controller.deletePostRequest);
 
 router.get("/:postid/like", isUser, controller.likePost);
 
