@@ -15,7 +15,11 @@ exports.getProfile = async (userId) => {
           comments: true,
           profile: true,
           postsCreated: {
-            include: { author: true, _count: { select: { likedby: true } } },
+            include: {
+              author: true,
+              likedby: true,
+              _count: { select: { likedby: true } },
+            },
           },
         },
       },
@@ -44,7 +48,11 @@ exports.updateProfile = async (profile) => {
           comments: true,
           profile: true,
           postsCreated: {
-            include: { author: true, _count: { select: { likedby: true } } },
+            include: {
+              author: true,
+              likedby: true,
+              _count: { select: { likedby: true } },
+            },
           },
         },
       },

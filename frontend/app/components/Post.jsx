@@ -8,7 +8,6 @@ const API = `${import.meta.env.VITE_API}`;
 // Need to move the state out of the component since it can be conditionally rendered...
 
 export default function Post({ post, author }) {
-  console.log(post, author);
   const { user } = useUser();
   const [likes, setLikes] = useState(post.likedby.length);
   const [commenting, setCommenting] = useState(false);
@@ -36,7 +35,7 @@ export default function Post({ post, author }) {
         className="flex flex-col rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 m-5 justify-between"
         key={post.id}
       >
-        <div className="min-w-xl mt-10 ">
+        <div className="min-w-xl">
           <a
             href={"/profile/" + author.username}
             className="flex flex-row justify-items-center items-center justify-between w-33"

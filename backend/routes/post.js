@@ -11,10 +11,12 @@ router.put("/update/:postid", controller.updatePost);
 router.get("/following", isUser, controller.postsByFollowing);
 router.get("/popular", controller.popularPosts);
 router.get("/recent", controller.recentPosts);
+router.post("/post/:postid/comment", controller.createComment);
+router.post("/post/:postid/reply", controller.createReply);
 
 router
   .route("/post/:postid")
-.get(controller.getPost)
+  .get(controller.getPost)
   .put(controller.updatePost)
   .delete(controller.deletePost);
 

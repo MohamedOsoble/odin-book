@@ -90,7 +90,7 @@ exports.register = [
   },
 ];
 
-exports.all = async () => {
+exports.all = async (req, res, next) => {
   const result = await db.all();
-  return result;
+  return res.json(result);
 };

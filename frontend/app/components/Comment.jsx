@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { submitComment } from "../api/posts";
 import { useUser } from "../contexts/UserContexts";
 
+const API = `${import.meta.env.VITE_API}`;
+
 export function CreateComment({
   postId,
   setCommenting,
@@ -37,6 +39,35 @@ export function CreateComment({
       errors={errors}
       handleSubmit={handleSubmit}
     />
+  );
+}
+
+export function PostComment({ comment }) {
+  return (
+    <div key={comment.id}>
+      <div
+        className="flex flex-col rounded-xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 m-5 justify-evenly"
+        key={comment.id}
+      >
+        <div className="min-w-xl">
+          <a
+            href={"/profile/" + comment.author.username}
+            className="flex flex-row justify-items-center items-center justify-between w-33"
+          >
+            <img
+              src={`${API}${comment.author.profile.avatar}`}
+              className="rounded-4xl w-15 object-scale-down"
+            ></img>
+            <b>{comment.author.username}</b>
+          </a>
+        </div>
+        <p>{comment.content}</p>
+        <p className="text-xs text-gray-500">
+          Created:
+          {new Date(comment.createdAt).toString()}
+        </p>
+      </div>
+    </div>
   );
 }
 

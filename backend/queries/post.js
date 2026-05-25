@@ -15,6 +15,7 @@ exports.all = async () => {
     include: {
       author: true,
       comments: true,
+      likedby: true,
     },
   });
   return posts;
@@ -26,8 +27,10 @@ exports.getPost = async (postId) => {
       id: postId,
     },
     include: {
-      comments: true,
+      comments: { include: { author: { include: { profile: true } } } },
       likedby: true,
+      author: { include: { profile: { include: { user: true } } } },
+      _count: { select: { likedby: true } },
     },
   });
   return post;
@@ -62,6 +65,7 @@ exports.postsByUser = async (userId) => {
     },
     include: {
       author: true,
+      likedby: true,
       _count: {
         select: {
           likedby: true,
@@ -77,6 +81,7 @@ exports.popular = async () => {
   const posts = await prisma.post.findMany({
     include: {
       author: { include: { profile: { include: { user: true } } } },
+      likedby: true,
       _count: {
         select: {
           likedby: true,
@@ -90,6 +95,8 @@ exports.popular = async () => {
 exports.postsByFollowing = async (userId) => {
   const posts = await prisma.post.findMany({
     include: {
+      author: { include: { profile: { include: { user: true } } } },
+      likedby: true,
       _count: {
         select: {
           likedby: true,
