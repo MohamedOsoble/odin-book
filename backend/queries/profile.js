@@ -8,12 +8,20 @@ exports.getProfile = async (userId) => {
     include: {
       user: {
         select: {
+          id: true,
           username: true,
           email: true,
           followers: true,
           following: true,
-          comments: true,
+          comments: { include: { author: { include: { profile: true } } } },
           profile: true,
+          postsLiked: {
+            include: {
+              author: true,
+              likedby: true,
+              _count: { select: { likedby: true } },
+            },
+          },
           postsCreated: {
             include: {
               author: true,
@@ -78,4 +86,26 @@ exports.getAvatar = async (userId) => {
     where: { userId: userId },
   });
   return profile;
+};
+
+exports.follow = async (followerId, followingId) => {
+  const follow = await prisma.follows.create({
+    data: {
+      followerId: followerId,
+      followingId: followingId,
+    },
+  });
+  return follow;
+};
+
+exports.unfollow = async (followerId, followingId) => {
+  const unfollow = await prisma.follows.delete({
+    where: {
+      followerId_followingId: {
+        followerId: followerId,
+        followingId: followingId,
+      },
+    },
+  });
+  return unfollow;
 };

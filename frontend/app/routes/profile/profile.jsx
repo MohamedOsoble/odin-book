@@ -1,8 +1,11 @@
 import { useLoaderData } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
 import Post from "../../components/Post";
 import { dateToInput } from "../../utils/utility";
+import { useUser } from "../../contexts/UserContexts";
+import { PostComment } from "../../components/Comment";
+import { LoadingComponent } from "../../components/Loading";
 
 export async function clientLoader({ params }) {
   const profileData = await API.getProfile(params.username);
@@ -10,16 +13,15 @@ export async function clientLoader({ params }) {
 }
 
 function LoadPosts(props) {
-  const { profile, posts } = props;
+  const { profile, posts, empty } = props;
   const author = {
     id: profile.userId,
     username: profile.user.username,
     avatar: profile.avatar,
   };
 
-  console.log(posts);
   if (posts.length < 1) {
-    return <h1>There are no posts</h1>;
+    return <h1>This user has not {empty} any posts</h1>;
   } else {
     return (
       <div>
@@ -31,20 +33,22 @@ function LoadPosts(props) {
   }
 }
 
-function loadComments(comments) {
-  return (
-    <div>
-      <h1> There are no comments </h1>
-    </div>
-  );
-}
-
-function loadLikes(likes) {
-  return (
-    <div>
-      <h1>There are no liked posts...</h1>
-    </div>
-  );
+function LoadComments({ comments }) {
+  if (comments.length < 1) {
+    return (
+      <div>
+        <h1>This user has not made any comments</h1>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        {comments.map((comment) => {
+          return <PostComment comment={comment} />;
+        })}
+      </div>
+    );
+  }
 }
 
 // This is going to take more work, fix edit profile first and move this to another file, combine image uploads in general...
@@ -59,7 +63,6 @@ function UploadAvatar({ username, setChangeAvatar, profile, setProfile }) {
     const avatar = e.target.avatar.files;
     const isImage = verifyFileType(avatar[0]);
     if (!isImage) {
-      console.log("Please submit the correct filetype...");
       return false;
     } else {
       const form = new FormData(e.target);
@@ -90,23 +93,60 @@ function UploadAvatar({ username, setChangeAvatar, profile, setProfile }) {
   );
 }
 
-function ProfileCard({ profile, setEditing }) {
+function FollowButton({ isFollowing, onClick }) {
+  return (
+    <div>
+      <button className="btn" onClick={onClick}>
+        {isFollowing ? "Unfollow" : "Follow"}
+      </button>
+    </div>
+  );
+}
+
+function ProfileCard({
+  profile,
+  setEditing,
+  isFollowing,
+  setIsFollowing,
+  user,
+}) {
+  const handleFollow = async (e) => {
+    try {
+      const response = isFollowing
+        ? await API.follow(profile.user.username, "unfollow")
+        : await API.follow(profile.user.username, "follow");
+      if (response) {
+        console.log(response);
+        setIsFollowing(!isFollowing);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="max-w-xl min-w-2xl flex-col justify-items-center border-2 border-solid rounded-md">
-      <div className="flex flex-row min-w-xl mt-10 ">
+      <div className="flex flex-row min-w-xl mt-10 ml-5 ">
         <div className="flex flex-col">
           {" "}
           <img
             src={`${import.meta.env.VITE_API}${profile.avatar}`}
             className="rounded-4xl w-35 object-scale-down"
           ></img>{" "}
-          <button className="btn" onClick={() => setEditing(true)}>
-            Edit Profile
-          </button>
+          {user && user.id === profile.user.userId ? (
+            <button className="btn" onClick={() => setEditing(true)}>
+              Edit Profile
+            </button>
+          ) : null}
         </div>
 
         <div className="max-w-2xl ml-12">
-          <h1 className="text-3xl">{profile.user.username}'s Profile</h1>
+          <div className="flex flex-row justify-between">
+            <h1 className="text-3xl">{profile.user.username}'s Profile</h1>
+            {user.id === profile.user.id ? null : (
+              <FollowButton isFollowing={isFollowing} onClick={handleFollow} />
+            )}
+          </div>
           <p>
             <strong>Name: </strong>{" "}
             {profile.name ? profile.name : "Nameless user"}
@@ -155,7 +195,11 @@ function EditProfile({ profile, setProfile, setEditing }) {
     e.preventDefault();
     const response = await API.updateProfile(profile.user.username, details);
     setEditing(false);
-    setProfile(response);
+    if (response.status === 200) {
+      setProfile(response.data);
+    } else {
+      // Some sort of error notification
+    }
   };
 
   return (
@@ -229,8 +273,8 @@ function EditProfile({ profile, setProfile, setEditing }) {
   );
 }
 
-function Tab(profile) {
-  const [selected, setSelected] = useState("Posts");
+function Tab(profile, selected, setSelected) {
+  // const [selected, setSelected] = useState("Posts");
 
   const handleChange = (e) => {
     setSelected(e.target.value);
@@ -262,10 +306,22 @@ function Tab(profile) {
         </button>
       </div>
       {selected === "Posts" ? (
-        <LoadPosts profile={profile} posts={profile.user.postsCreated} />
+        <LoadPosts
+          profile={profile}
+          posts={profile.user.postsCreated}
+          empty={"created"}
+        />
       ) : null}
-      {selected === "Comments" ? loadComments(profile.user.comments) : null}
-      {selected === "Likes" ? loadLikes(profile.user.likes) : null}
+      {selected === "Comments" ? (
+        <LoadComments comments={profile.user.comments} />
+      ) : null}
+      {selected === "Likes" ? (
+        <LoadPosts
+          profile={profile}
+          posts={profile.user.postsLiked}
+          empty={"liked"}
+        />
+      ) : null}
     </div>
   );
 }
@@ -274,10 +330,26 @@ export default function Profile({ loaderData }) {
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loaderData.profile);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [currentTab, setCurrentTab] = useState("Posts");
+  const { user, isLoading } = useUser();
   const handleEdit = (e) => {};
   const handleUpload = (e) => {
     setUpload(!upload);
   };
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      user.following.some((item) => item.followingId === profile.user.id)
+    ) {
+      setIsFollowing(true);
+    }
+  }, [user]);
+
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
   return (
     <div>
       {editing ? (
@@ -285,16 +357,20 @@ export default function Profile({ loaderData }) {
           profile={profile}
           setProfile={setProfile}
           setEditing={setEditing}
+          user={user}
         />
       ) : (
         <ProfileCard
           profile={profile}
           setProfile={setProfile}
           setEditing={setEditing}
+          isFollowing={isFollowing}
+          setIsFollowing={setIsFollowing}
+          user={user}
         />
       )}
 
-      {Tab(profile)}
+      {Tab(profile, currentTab, setCurrentTab)}
     </div>
   );
 }

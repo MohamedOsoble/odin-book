@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const controller = require("../controllers/user");
-const { auth } = require("../controllers/auth");
+const auth = require("../middleware/auth");
 
 const router = Router();
 
@@ -10,7 +10,7 @@ router.get("/logout", controller.logout);
 
 router.post("/register", controller.register);
 
-router.get("/checkAuth", auth, controller.checkAuth);
+router.get("/checkAuth", auth.optional, controller.checkAuth);
 
 router.get("/all", controller.all);
 

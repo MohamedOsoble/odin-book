@@ -4,6 +4,7 @@ const LocalStrategy = require("passport-local");
 const DbPrivate = require("./prisma").private;
 const DbPublic = require("./prisma").public;
 const JwtStrategy = require("passport-jwt").Strategy;
+const AnonymousStrategy = require("passport-anonymous").Strategy;
 const validatePassword = require("./password.js").validate;
 
 const cookieExtractor = function (req) {
@@ -55,6 +56,16 @@ passport.use(
       where: {
         id: jwt_payload.sub,
       },
+      include: {
+        profile: true,
+        followers: true,
+        following: true,
+        postsCreated: true,
+        postsLiked: true,
+        sentRequests: true,
+        receivedRequests: true,
+        conversations: true,
+      },
     });
     if (user) {
       return done(null, user);
@@ -63,3 +74,7 @@ passport.use(
     }
   }),
 );
+
+// Anon Strategy for routes where auth is optional
+
+passport.use(new AnonymousStrategy());

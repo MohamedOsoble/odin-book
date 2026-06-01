@@ -19,7 +19,6 @@ export async function getProfile(username) {
 }
 
 export async function updateProfile(username, profile) {
-  console.log(profile);
   const response = await axios
     .post(URL + username + "/update", profile, options)
     .catch(function (err) {
@@ -27,8 +26,7 @@ export async function updateProfile(username, profile) {
         return err.response;
       }
     });
-  console.log(response);
-  return response.data;
+  return response;
 }
 
 export async function uploadAvatar(username, form) {
@@ -42,5 +40,17 @@ export async function uploadAvatar(username, form) {
         return err.response;
       }
     });
-  return response.data;
+  return response;
+}
+
+export async function follow(username, action) {
+  const response = await axios
+    .get(URL + username + "/" + action, {
+      method: "GET",
+      withCredentials: true,
+    })
+    .catch(function (err) {
+      return err.response;
+    });
+  return response;
 }

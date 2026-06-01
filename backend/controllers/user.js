@@ -56,10 +56,7 @@ exports.logout = (req, res) => {
 exports.checkAuth = (req, res) => {
   if (req.user) {
     return res.status(200).json({
-      user: {
-        id: req.cookies["jwt"]["id"],
-        username: req.user.username,
-      },
+      user: req.user,
     });
   }
   return res.status(200).json({

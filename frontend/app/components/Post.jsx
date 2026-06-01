@@ -86,13 +86,13 @@ export default function Post({ post, author }) {
                 >
                   Delete
                 </button>
-                <dialog id="delete_modal" class="modal">
-                  <div class="modal-box">
-                    <h3 class="text-lg font-bold">Delete Post?</h3>
-                    <p class="py-4">
+                <dialog id="delete_modal" className="modal">
+                  <div className="modal-box">
+                    <h3 className="text-lg font-bold">Delete Post?</h3>
+                    <p className="py-4">
                       Please note that this action cannot be undone.
                     </p>
-                    <div class="modal-action">
+                    <div className="modal-action">
                       <form method="dialog">
                         <button
                           className="btn text-green-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"

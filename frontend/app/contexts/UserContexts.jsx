@@ -16,6 +16,7 @@ const UserContext = createContext(null);
 // user provider
 function UserProvider(props) {
   const [user, setUser] = useState(false); // user (or false if not logged in)
+  const [isLoading, setIsLoading] = useState(true);
 
   // fetch user on mount
   useEffect(() => {
@@ -24,6 +25,7 @@ function UserProvider(props) {
       .then(function (response) {
         if (response.data.user) {
           setUser(response.data.user);
+          setIsLoading(false);
         }
       })
       .catch((error) => {
@@ -49,10 +51,11 @@ function UserProvider(props) {
   const contextValue = useMemo(
     () => ({
       user,
+      isLoading,
       login,
       logout,
     }),
-    [user, login, logout],
+    [user, isLoading, login, logout],
   );
 
   return <UserContext.Provider value={contextValue} {...props} />;

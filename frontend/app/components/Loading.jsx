@@ -1,4 +1,4 @@
-import { FourSquare } from "react-loading-indicators";
+import { FourSquare, OrbitProgress } from "react-loading-indicators";
 
 export const LoadingPage = ({ text }) => {
   return (
