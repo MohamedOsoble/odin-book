@@ -6,6 +6,7 @@ import { dateToInput } from "../../utils/utility";
 import { useUser } from "../../contexts/UserContexts";
 import { PostComment } from "../../components/Comment";
 import { LoadingComponent } from "../../components/Loading";
+import { stringMaxLength, capitalizeFirst } from "../../utils/utility";
 
 export async function clientLoader({ params }) {
   const profileData = await API.getProfile(params.username);
@@ -167,16 +168,28 @@ function ProfileCard({
         </div>
       </div>
       <div className="flex flex-row max-w-sm mx-auto pb-7">
-        <a href={"/profile/" + profile.user.username + "/following"}>
-          <p className="pr-2.5 underline">
-            Following: {profile.user.following.length}
-          </p>
-        </a>
-        <a href={"/profile/" + profile.user.username + "/followers"}>
-          <p className="pl-2.5 underline">
-            Followers: {profile.user.followers.length}
-          </p>
-        </a>
+        <button
+          className="pr-2.5 underline"
+          onClick={() => document.getElementById("following-modal").showModal()}
+        >
+          Following: {profile.user.following.length}
+        </button>
+        <FollowList
+          followers={profile.user.following}
+          type={"following"}
+          id={"following-modal"}
+        />
+        <FollowList
+          followers={profile.user.followers}
+          type={"follower"}
+          id={"follower-modal"}
+        />
+        <button
+          className="pl-2.5 underline"
+          onClick={() => document.getElementById("follower-modal").showModal()}
+        >
+          Followers: {profile.user.followers.length}
+        </button>
       </div>
     </div>
   );
@@ -273,9 +286,56 @@ function EditProfile({ profile, setProfile, setEditing }) {
   );
 }
 
-function Tab(profile, selected, setSelected) {
-  // const [selected, setSelected] = useState("Posts");
+function FollowList({ followers, type, id }) {
+  const Entry = ({ user }) => {
+    return (
+      <div key={user.id}>
+        <a href={"/profile/" + user.username} key={user.id}>
+          <div
+            key={user.id}
+            className="flex flex-row items-center card-sm card-side h-20 bg-base-100 shadow-sm border border-gray-200 dark:border-gray-700  rounded-md"
+          >
+            <figure>
+              <img
+                src={`${import.meta.env.VITE_API}${user.profile.avatar}`}
+                className="rounded-full pl-2 w-12 h-12 rounded-full"
+              />
+            </figure>
+            <div
+              className="card-body flex flex-row items-center"
+              key="follower-info"
+            >
+              <h3 className="card-title">{user.username} </h3>
+              <p> - {stringMaxLength(user.profile.bio, 50)}</p>
+              <div className="card-actions justify-end"></div>
+            </div>
+          </div>
+        </a>
+      </div>
+    );
+  };
+  return (
+    <dialog id={id} className="modal">
+      <div className="modal-box">
+        <h3 className="font-bold text-lg">
+          {type === "following"
+            ? capitalizeFirst(type)
+            : capitalizeFirst(type) + "s"}
+        </h3>
+        <div>
+          {followers.map((follower) => {
+            return <Entry user={follower[type]} />;
+          })}
+        </div>
+      </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  );
+}
 
+function Tab(profile, selected, setSelected) {
   const handleChange = (e) => {
     setSelected(e.target.value);
   };
@@ -333,10 +393,6 @@ export default function Profile({ loaderData }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentTab, setCurrentTab] = useState("Posts");
   const { user, isLoading } = useUser();
-  const handleEdit = (e) => {};
-  const handleUpload = (e) => {
-    setUpload(!upload);
-  };
 
   useEffect(() => {
     if (

@@ -3,7 +3,6 @@ const axios = require("axios");
 const token = process.env.IMGCHEST_TOKEN;
 
 exports.uploadImage = async (req, res, next) => {
-  console.log(token);
   const data = {
     title: "",
     privacy: "secret",
@@ -20,7 +19,6 @@ exports.uploadImage = async (req, res, next) => {
     .catch(function (err) {
       return err;
     });
-  console.log(response);
   req.uploadData = response.data;
   next();
 };

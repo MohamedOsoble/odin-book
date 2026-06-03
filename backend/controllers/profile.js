@@ -9,7 +9,6 @@ const findUser = async (username) => {
 };
 
 exports.getProfile = async (req, res, next) => {
-  console.log("Getting Profile");
   const user = await findUser(req.params.username);
   const profileData = await dbProfile.getProfile(user.id);
   return res.status(200).json(profileData);

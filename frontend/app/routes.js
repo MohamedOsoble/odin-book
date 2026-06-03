@@ -11,4 +11,5 @@ export default [
   route("/logout", "routes/login/logout.jsx"),
   route("/register", "routes/register/register.jsx"),
   route("/profile/:username", "routes/profile/profile.jsx"),
+  route("/messages", "routes/messages/messages.jsx"),
 ];

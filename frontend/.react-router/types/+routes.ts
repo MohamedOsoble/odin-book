@@ -39,12 +39,15 @@ type Pages = {
       "username": string;
     };
   };
+  "/messages": {
+    params: {};
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/posts/following" | "/posts/recent" | "/post/:postId" | "/login" | "/logout" | "/register" | "/profile/:username";
+    page: "/" | "/posts/following" | "/posts/recent" | "/post/:postId" | "/login" | "/logout" | "/register" | "/profile/:username" | "/messages";
   };
   "routes/posts/posts.jsx": {
     id: "routes/posts/posts";
@@ -82,6 +85,10 @@ type RouteFiles = {
     id: "routes/profile/profile";
     page: "/profile/:username";
   };
+  "routes/messages/messages.jsx": {
+    id: "routes/messages/messages";
+    page: "/messages";
+  };
 };
 
 type RouteModules = {
@@ -95,4 +102,5 @@ type RouteModules = {
   "routes/login/logout": typeof import("./app/routes/login/logout.jsx");
   "routes/register/register": typeof import("./app/routes/register/register.jsx");
   "routes/profile/profile": typeof import("./app/routes/profile/profile.jsx");
+  "routes/messages/messages": typeof import("./app/routes/messages/messages.jsx");
 };
