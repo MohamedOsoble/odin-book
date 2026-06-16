@@ -1,20 +1,21 @@
 import { useUser } from "../contexts/UserContexts";
 import ThemeController from "./ThemeController";
 import { findUser } from "../api/search";
+import { useNavigate } from "react-router";
 
 export const Navbar = () => {
-  const { user } = useUser();
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
 
   const search = async (e) => {
     e.preventDefault();
     const username = e.target.search.value;
-    const response = await findUser(username);
-    console.log(response);
+    navigate("/search/" + username);
   };
 
   const userNavLinks = [
     { name: "Home", href: "/", sublinks: [] },
-    { name: "Profile", href: "/profile/" + user.username, sublinks: [] },
+    { name: "Profile", href: "/profile/" + currentUser.username, sublinks: [] },
     {
       name: "Explore",
       href: "/posts",
@@ -103,7 +104,7 @@ export const Navbar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+            {currentUser ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
           </ul>
         </div>
         <div className="navbar-end">
@@ -120,7 +121,7 @@ export const Navbar = () => {
       </div>
       <div className="collapse-content lg:hidden z-1">
         <ul className="menu">
-          {user ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+          {currentUser ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
         </ul>
       </div>
     </div>

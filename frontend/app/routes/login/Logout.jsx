@@ -4,19 +4,19 @@ import { useNavigate } from "react-router";
 import { LoadingPage } from "../../components/Loading";
 
 export default function Logout() {
-  const { user, logout } = useUser();
+  const { currentUser, logout } = useUser();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // checks if user is logged in then logs them out and redirects
-    if (user) {
+    if (currentUser) {
       logout();
     } else {
       setLoading(false);
       redirectUser();
     }
-  }, [user]);
+  }, [currentUser]);
 
   const redirectUser = () => {
     navigate("/");

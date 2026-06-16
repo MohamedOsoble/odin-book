@@ -14,11 +14,10 @@ type Pages = {
   "/": {
     params: {};
   };
-  "/posts/following": {
-    params: {};
-  };
-  "/posts/recent": {
-    params: {};
+  "/posts/:route": {
+    params: {
+      "route": string;
+    };
   };
   "/post/:postId": {
     params: {
@@ -42,65 +41,68 @@ type Pages = {
   "/messages": {
     params: {};
   };
+  "/search/:username": {
+    params: {
+      "username": string;
+    };
+  };
 };
 
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/posts/following" | "/posts/recent" | "/post/:postId" | "/login" | "/logout" | "/register" | "/profile/:username" | "/messages";
+    page: "/" | "/posts/:route" | "/post/:postId" | "/login" | "/logout" | "/register" | "/profile/:username" | "/messages" | "/search/:username";
   };
-  "routes/posts/posts.jsx": {
-    id: "routes/posts/posts";
-    page: "/" | "/posts/following" | "/posts/recent";
-  };
-  "routes/posts/popular.jsx": {
-    id: "routes/posts/popular";
+  "routes/posts/Posts.jsx": {
+    id: "routes/posts/Posts";
+    page: "/" | "/posts/:route";
+  } | {
+    id: "home";
     page: "/";
+  } | {
+    id: "other-posts";
+    page: "/posts/:route";
   };
-  "routes/posts/following.jsx": {
-    id: "routes/posts/following";
-    page: "/posts/following";
-  };
-  "routes/posts/recent.jsx": {
-    id: "routes/posts/recent";
-    page: "/posts/recent";
-  };
-  "routes/posts/viewpost.jsx": {
-    id: "routes/posts/viewpost";
+  "routes/posts/Viewpost.jsx": {
+    id: "routes/posts/Viewpost";
     page: "/post/:postId";
   };
-  "routes/login/login.jsx": {
-    id: "routes/login/login";
+  "routes/login/Login.jsx": {
+    id: "routes/login/Login";
     page: "/login";
   };
-  "routes/login/logout.jsx": {
-    id: "routes/login/logout";
+  "routes/login/Logout.jsx": {
+    id: "routes/login/Logout";
     page: "/logout";
   };
-  "routes/register/register.jsx": {
-    id: "routes/register/register";
+  "routes/register/Register.jsx": {
+    id: "routes/register/Register";
     page: "/register";
   };
-  "routes/profile/profile.jsx": {
-    id: "routes/profile/profile";
+  "routes/profile/Profile.jsx": {
+    id: "routes/profile/Profile";
     page: "/profile/:username";
   };
-  "routes/messages/messages.jsx": {
-    id: "routes/messages/messages";
+  "routes/messages/Messages.jsx": {
+    id: "routes/messages/Messages";
     page: "/messages";
+  };
+  "routes/search/Results.jsx": {
+    id: "routes/search/Results";
+    page: "/search/:username";
   };
 };
 
 type RouteModules = {
   "root": typeof import("./app/root.jsx");
-  "routes/posts/posts": typeof import("./app/routes/posts/posts.jsx");
-  "routes/posts/popular": typeof import("./app/routes/posts/popular.jsx");
-  "routes/posts/following": typeof import("./app/routes/posts/following.jsx");
-  "routes/posts/recent": typeof import("./app/routes/posts/recent.jsx");
-  "routes/posts/viewpost": typeof import("./app/routes/posts/viewpost.jsx");
-  "routes/login/login": typeof import("./app/routes/login/login.jsx");
-  "routes/login/logout": typeof import("./app/routes/login/logout.jsx");
-  "routes/register/register": typeof import("./app/routes/register/register.jsx");
-  "routes/profile/profile": typeof import("./app/routes/profile/profile.jsx");
-  "routes/messages/messages": typeof import("./app/routes/messages/messages.jsx");
+  "routes/posts/Posts": typeof import("./app/routes/posts/Posts.jsx");
+  "home": typeof import("./app/routes/posts/Posts.jsx");
+  "other-posts": typeof import("./app/routes/posts/Posts.jsx");
+  "routes/posts/Viewpost": typeof import("./app/routes/posts/Viewpost.jsx");
+  "routes/login/Login": typeof import("./app/routes/login/Login.jsx");
+  "routes/login/Logout": typeof import("./app/routes/login/Logout.jsx");
+  "routes/register/Register": typeof import("./app/routes/register/Register.jsx");
+  "routes/profile/Profile": typeof import("./app/routes/profile/Profile.jsx");
+  "routes/messages/Messages": typeof import("./app/routes/messages/Messages.jsx");
+  "routes/search/Results": typeof import("./app/routes/search/Results.jsx");
 };

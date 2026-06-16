@@ -9,17 +9,6 @@ const options = {
   withCredentials: true, // Ensure Axios includes cookies in the request
 };
 
-// export async function like(userId, postId) {
-//   // input userid and postid, hit api to update like.
-//   const response = await axios
-//     .post(URL + postId + "/like", { postId, userId })
-//     .catch(function (err) {
-//       console.log(err);
-//       return err.response.data;
-//     });
-//   return response;
-// }
-
 export async function popular() {
   const response = await axios
     .get(URL + "popular", options)

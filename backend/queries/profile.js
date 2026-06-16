@@ -29,14 +29,16 @@ exports.getProfile = async (userId) => {
           profile: true,
           postsLiked: {
             include: {
-              author: true,
+              author: { include: { profile: true } },
+              comments: true,
               likedby: true,
               _count: { select: { likedby: true } },
             },
           },
           postsCreated: {
             include: {
-              author: true,
+              author: { include: { profile: true } },
+              comments: true,
               likedby: true,
               _count: { select: { likedby: true } },
             },

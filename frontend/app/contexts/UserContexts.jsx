@@ -15,7 +15,7 @@ const UserContext = createContext(null);
 
 // user provider
 function UserProvider(props) {
-  const [user, setUser] = useState(false); // user (or false if not logged in)
+  const [currentUser, setCurrentUser] = useState(false); // user (or false if not logged in)
   const [isLoading, setIsLoading] = useState(true);
 
   // fetch user on mount
@@ -24,41 +24,41 @@ function UserProvider(props) {
     API.auth()
       .then(function (response) {
         if (response.data.user) {
-          setUser(response.data.user);
+          setCurrentUser(response.data.user);
           setIsLoading(false);
         } else {
-          setUser(false);
+          setCurrentUser(false);
           setIsLoading(false);
         }
       })
       .catch((error) => {
-        setUser(false);
+        setCurrentUser(false);
       });
   }, []); // run only once
 
   const login = useCallback(async (user) => {
     const response = await API.login(user);
     if (response.status === 200) {
-      setUser(response.data.user);
+      setCurrentUser(response.data.user);
     }
     return response;
   }, []);
 
   const logout = useCallback(() => {
     API.logout().then(function () {
-      setUser(false);
+      setCurrentUser(false);
     });
   }, []);
 
   // memo functions to optimise re-renders
   const contextValue = useMemo(
     () => ({
-      user,
+      currentUser,
       isLoading,
       login,
       logout,
     }),
-    [user, isLoading, login, logout],
+    [currentUser, isLoading, login, logout],
   );
 
   return <UserContext.Provider value={contextValue} {...props} />;

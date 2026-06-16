@@ -1,13 +1,13 @@
-import { emptyPosts } from "./posts";
+import { emptyPosts } from "./Posts";
 import Post from "../../components/Post";
-import { recent } from "../../api/posts";
+import { popular } from "../../api/posts";
 
 export async function clientLoader() {
-  const posts = await recent();
+  const posts = await popular();
   return posts.data;
 }
 
-export default function Recent({ loaderData }) {
+export default function Popular({ loaderData }) {
   return (
     <div className="flex flex-col p-6 dark:border-gray-700 space-y-4 m-5">
       {loaderData.length > 1 ? (
@@ -16,6 +16,7 @@ export default function Recent({ loaderData }) {
             const author = {
               id: post.author.id,
               username: post.author.username,
+              name: post.author.profile.name,
               avatar: post.author.profile.avatar,
             };
             return <Post post={post} author={author} />;

@@ -42,7 +42,11 @@ exports.search = async (username) => {
     where: {
       username: {
         contains: username,
+        mode: "insensitive",
       },
+    },
+    include: {
+      profile: true,
     },
   });
   return users;

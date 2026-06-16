@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
 import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
-import Post from "../../components/Post";
+import PostList from "../../components/Post";
 import { useUser } from "../../contexts/UserContexts";
 import { PostComment } from "../../components/Comment";
 import { LoadingComponent } from "../../components/Loading";
@@ -23,15 +23,14 @@ function LoadPosts(props) {
     username: profile.user.username,
     avatar: profile.avatar,
   };
+  console.log(posts);
 
   if (posts.length < 1) {
     return <h1>This user has not {empty} any posts</h1>;
   } else {
     return (
       <div>
-        {posts.map((post) => {
-          return <Post post={post} author={author} />;
-        })}
+        <PostList postList={posts} />
       </div>
     );
   }
@@ -136,7 +135,7 @@ function ProfileCard({
   setEditing,
   isFollowing,
   setIsFollowing,
-  user,
+  currentUser,
 }) {
   const handleFollow = async (e) => {
     try {
@@ -160,7 +159,7 @@ function ProfileCard({
             src={avatarSrc}
             className="rounded-4xl w-35 object-scale-down"
           ></img>{" "}
-          {user && user.id === profile.user.id ? (
+          {currentUser && currentUser.id === profile.user.id ? (
             <button className="btn" onClick={() => setEditing(true)}>
               Edit Profile
             </button>
@@ -170,7 +169,7 @@ function ProfileCard({
         <div className="max-w-2xl ml-12">
           <div className="flex flex-row justify-between">
             <h1 className="text-3xl">{profile.user.username}'s Profile</h1>
-            {user.id === profile.user.id ? null : (
+            {currentUser.id === profile.user.id ? null : (
               <FollowButton isFollowing={isFollowing} onClick={handleFollow} />
             )}
           </div>
@@ -342,17 +341,17 @@ function EditProfile({
 }
 
 function FollowList({ followers, type, id }) {
-  const Entry = ({ user }) => {
+  const Entry = ({ targetUser }) => {
     return (
-      <div key={user.id}>
-        <a href={"/profile/" + user.username} key={user.id}>
+      <div key={targetUser.id}>
+        <a href={"/profile/" + targetUser.username} key={targetUser.id}>
           <div
-            key={user.id}
+            key={targetUser.id}
             className="flex flex-row items-center card-sm card-side h-20 bg-base-100 shadow-sm border border-gray-200 dark:border-gray-700  rounded-md"
           >
             <figure>
               <img
-                src={`${import.meta.env.VITE_API}${user.profile.avatar}`}
+                src={`${import.meta.env.VITE_API}${targetUser.profile.avatar}`}
                 className="rounded-full pl-2 w-12 h-12 rounded-full"
               />
             </figure>
@@ -360,8 +359,8 @@ function FollowList({ followers, type, id }) {
               className="card-body flex flex-row items-center"
               key="follower-info"
             >
-              <h3 className="card-title">{user.username} </h3>
-              <p> - {stringMaxLength(user.profile.bio, 50)}</p>
+              <h3 className="card-title">{targetUser.username} </h3>
+              <p> - {stringMaxLength(targetUser.profile.bio, 50)}</p>
               <div className="card-actions justify-end"></div>
             </div>
           </div>
@@ -379,7 +378,7 @@ function FollowList({ followers, type, id }) {
         </h3>
         <div>
           {followers.map((follower) => {
-            return <Entry user={follower[type]} />;
+            return <Entry targetUser={follower[type]} />;
           })}
         </div>
       </div>
@@ -450,16 +449,16 @@ export default function Profile({ loaderData }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentTab, setCurrentTab] = useState("Posts");
   const [preview, setPreview] = useState("");
-  const { user, isLoading } = useUser();
+  const { currentUser, isLoading } = useUser();
 
   useEffect(() => {
     if (
       !isLoading &&
-      user.following.some((item) => item.followingId === profile.user.id)
+      currentUser.following.some((item) => item.followingId === profile.user.id)
     ) {
       setIsFollowing(true);
     }
-  }, [user]);
+  }, [currentUser]);
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -474,7 +473,7 @@ export default function Profile({ loaderData }) {
           setEditing={setEditing}
           preview={preview}
           setPreview={setPreview}
-          user={user}
+          currentUser={currentUser}
         />
       ) : (
         <ProfileCard
@@ -485,7 +484,7 @@ export default function Profile({ loaderData }) {
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
           preview={preview}
-          user={user}
+          currentUser={currentUser}
         />
       )}
 

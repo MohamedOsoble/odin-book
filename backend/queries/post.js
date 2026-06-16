@@ -82,6 +82,7 @@ exports.popular = async () => {
     include: {
       author: { include: { profile: { include: { user: true } } } },
       likedby: true,
+      comments: true,
       _count: {
         select: {
           likedby: true,
@@ -97,6 +98,7 @@ exports.postsByFollowing = async (userId) => {
     include: {
       author: { include: { profile: { include: { user: true } } } },
       likedby: true,
+      comments: true,
       _count: {
         select: {
           likedby: true,
@@ -122,6 +124,7 @@ exports.recent = async () => {
     include: {
       author: { include: { profile: { include: { user: true } } } },
       likedby: true,
+      comments: true,
       _count: {
         select: {
           likedby: true,

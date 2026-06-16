@@ -1,4 +1,4 @@
-import { emptyPosts } from "./posts";
+import { emptyPosts } from "./Posts";
 import Post from "../../components/Post";
 import { following } from "../../api/posts";
 
@@ -16,6 +16,7 @@ export default function Popular({ loaderData }) {
             const author = {
               id: post.author.id,
               username: post.author.username,
+              name: post.author.profile.name,
               avatar: post.author.profile.avatar,
             };
             return <Post post={post} author={author} />;

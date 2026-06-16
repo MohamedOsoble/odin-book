@@ -12,15 +12,15 @@ export async function clientLoader() {
   return data;
 }
 
-function Chat({ user, recipient, messages }) {
+function Chat({ currentUser, targetUser, messages }) {
   return (
     <div name="messages" id="messages">
       {messages.map((msg, index) => (
         <div key={index}>
-          {msg.user.id === user.id ? (
-            <Message source={"user"} message={msg} />
+          {msg.user.id === currentUser.id ? (
+            <Message source={"currentUser"} message={msg} />
           ) : (
-            <Message source={"recipient"} message={msg} />
+            <Message source={"targetUser"} message={msg} />
           )}
         </div>
       ))}
@@ -29,13 +29,13 @@ function Chat({ user, recipient, messages }) {
 }
 
 function Message({ source, message }) {
-  if (source === "user") {
+  if (source === "currentUser") {
     return (
       <div className={"chat chat-end"}>
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img
-              alt="User Avatar"
+              alt="Your own Avatar"
               src={API_URL + message.user.profile.avatar}
             />
           </div>
@@ -56,7 +56,7 @@ function Message({ source, message }) {
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img
-              alt="User Avatar"
+              alt="Recipients Avatar"
               src={API_URL + message.user.profile.avatar}
             />
           </div>
@@ -74,8 +74,8 @@ function Message({ source, message }) {
   }
 }
 
-function recipientFromArray(conversation, userId) {
-  return conversation.users.filter((user) => user.id != userId);
+function recipientFromArray(conversation, currentUserId) {
+  return conversation.users.filter((user) => user.id != currentUserId);
 }
 
 function FriendsMenu({ friends, setCurrentChat }) {
@@ -124,27 +124,27 @@ function FriendsMenu({ friends, setCurrentChat }) {
   );
 }
 
-function ConversationsMenu({ conversations, userId, setCurrentChat }) {
+function ConversationsMenu({ conversations, currentUserId, setCurrentChat }) {
   return (
     <ul className="list bg-base-100 rounded-box shadow-md">
       {conversations.map((conversation) => {
-        const recipient = recipientFromArray(conversation, userId)[0];
+        const targetUser = recipientFromArray(conversation, currentUserId)[0];
         return (
           <li
             className="list-row"
             key={conversation.id}
             onClick={() => {
-              setCurrentChat(recipient);
+              setCurrentChat(targetUser);
             }}
           >
             <div>
               <img
                 className="size-10 rounded-box"
-                src={API_URL + recipient.profile.avatar}
+                src={API_URL + targetUser.profile.avatar}
               />
             </div>
             <div>
-              <div>{recipient.username}</div>
+              <div>{targetUser.username}</div>
               <div className="text-xs uppercase font-semibold opacity-60"></div>
             </div>
           </li>
@@ -154,15 +154,15 @@ function ConversationsMenu({ conversations, userId, setCurrentChat }) {
   );
 }
 
-function ChatBox({ recipient, user, setError }) {
+function ChatBox({ targetUser, currentUser, setError }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [recipientId, setRecipientId] = useState(recipient.id);
+  const [recipientId, setRecipientId] = useState(targetUser.id);
 
   useEffect(() => {
-    socket.auth = { user, recipient };
+    socket.auth = { currentUser, targetUser };
     socket.connect();
-    socket.emit("start_chat", recipient.id);
+    socket.emit("start_chat", targetUser.id);
 
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
@@ -187,14 +187,14 @@ function ChatBox({ recipient, user, setError }) {
       socket.disconnect();
       socket.off("receive_message");
     };
-  }, [recipient]);
+  }, [targetUser]);
 
   const sendMessage = () => {
     if (message) {
-      socket.emit("send_message", { message, user });
+      socket.emit("send_message", { message, currentUser });
       setMessages((prev) => [
         ...prev,
-        { message: { message: message, time: Date.now() }, user },
+        { message: { message: message, time: Date.now() }, currentUser },
       ]);
       setMessage("");
     }
@@ -209,15 +209,15 @@ function ChatBox({ recipient, user, setError }) {
         <div id="chat-header" className="flex flex-row border-1 items-center">
           <img
             className="size-10 rounded-box"
-            src={API_URL + recipient.profile.avatar}
+            src={API_URL + targetUser.profile.avatar}
           />
 
           <div className="">
-            <h1>{recipient.username}</h1>
+            <h1>{targetUser.username}</h1>
           </div>
         </div>
         <div id="chat-body" className="overflow-y-scroll">
-          <Chat user={user} recipient={recipient} messages={messages} />
+          <Chat user={currentUser} recipient={targetUser} messages={messages} />
           <div name="message-input" id="message-input" className="">
             <input
               type="text"
@@ -242,7 +242,7 @@ export default function App({ loaderData }) {
   const [showFriends, setShowFriends] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
   const [error, setError] = useState("");
-  const { user, isLoading } = useUser();
+  const { currentUser, isLoading } = useUser();
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -255,7 +255,7 @@ export default function App({ loaderData }) {
         {loaderData.data.conversations.length > 0 ? (
           <ConversationsMenu
             conversations={loaderData.data.conversations}
-            userId={user.id}
+            userId={currentUser.id}
             setCurrentChat={setCurrentChat}
           />
         ) : (
@@ -268,7 +268,11 @@ export default function App({ loaderData }) {
       <div name="main-content" className="grow-1 h-100">
         {error ? <Alert message={error} setState={setError} /> : null}
         {currentChat ? (
-          <ChatBox recipient={currentChat} user={user} setError={setError} />
+          <ChatBox
+            recipient={currentChat}
+            user={currentUser}
+            setError={setError}
+          />
         ) : (
           <FriendsMenu
             friends={loaderData.data.followers}

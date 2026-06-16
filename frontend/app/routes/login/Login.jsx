@@ -5,15 +5,15 @@ import { useNavigate } from "react-router";
 export default function Login() {
   const [formState, setFormState] = useState({});
   const [formErrors, setFormErrors] = useState({});
-  const { user, login } = useUser();
+  const { user: currentUser, login } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
     // checks if user is logged in
-    if (user) {
+    if (currentUser) {
       redirectUser();
     }
-  }, [user]);
+  }, [currentUser]);
 
   const redirectUser = () => {
     navigate("/");

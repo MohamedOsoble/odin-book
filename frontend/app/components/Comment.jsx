@@ -13,7 +13,7 @@ export function CreateComment({
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { currentUser } = useUser();
 
   // Assume validated prior to commenting
   const handleSubmit = async (e) => {
@@ -23,12 +23,14 @@ export function CreateComment({
       return;
     } else {
       const response = await submitComment({
-        authorId: user.id,
+        authorId: currentUser.id,
         postId: postId,
         content: content,
         parentCommentId: parentCommentId,
       });
-      console.log(response);
+      setContent("");
+      setCommenting(false);
+      return response;
     }
   };
   return (
