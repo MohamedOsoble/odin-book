@@ -36,3 +36,14 @@ exports.all = async () => {
   const users = await prisma.user.findMany();
   return users;
 };
+
+exports.search = async (username) => {
+  const users = await prisma.user.findMany({
+    where: {
+      username: {
+        contains: username,
+      },
+    },
+  });
+  return users;
+};

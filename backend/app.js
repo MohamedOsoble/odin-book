@@ -45,6 +45,7 @@ app.use("/user", routes.user);
 app.use("/posts", routes.post);
 app.use("/profile", routes.profile);
 app.use("/messages", routes.messages);
+app.use("/search", routes.search);
 app.use("/public/uploads/:filename", (req, res, next) => {
   res.sendFile(__dirname + "/public/uploads/" + req.params.filename);
 });

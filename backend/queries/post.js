@@ -183,3 +183,16 @@ exports.likePost = async (userId, postId) => {
     return updatedPost;
   }
 };
+
+exports.findPosts = async (term) => {
+  const posts = await prisma.post.findMany({
+    where: {
+      content: {
+        contains: {
+          term,
+        },
+      },
+    },
+  });
+  return posts;
+};

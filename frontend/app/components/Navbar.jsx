@@ -1,8 +1,16 @@
 import { useUser } from "../contexts/UserContexts";
 import ThemeController from "./ThemeController";
+import { findUser } from "../api/search";
 
 export const Navbar = () => {
   const { user } = useUser();
+
+  const search = async (e) => {
+    e.preventDefault();
+    const username = e.target.search.value;
+    const response = await findUser(username);
+    console.log(response);
+  };
 
   const userNavLinks = [
     { name: "Home", href: "/", sublinks: [] },
@@ -99,11 +107,14 @@ export const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered w-64 lg:w-auto"
-          />
+          <form onSubmit={search}>
+            <input
+              name="search"
+              type="text"
+              placeholder="Search user"
+              className="input input-bordered w-64 lg:w-auto"
+            />
+          </form>
           <ThemeController />
         </div>
       </div>
