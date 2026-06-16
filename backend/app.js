@@ -18,15 +18,8 @@ require("./lib/passport.js");
 
 // Instantiate express app.
 const app = express();
-const server = createServer(app);
-const io = require("socket.io")(server, {
-  cors: {
-    origin: origin,
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
-  },
-});
+// Instantiate web socket.
+const server = require("./lib/socket.js")(app, origin);
 
 // Add cors and request parser
 app.use(express.urlencoded({ extended: true }));
@@ -51,20 +44,9 @@ const PORT = 3000;
 app.use("/user", routes.user);
 app.use("/posts", routes.post);
 app.use("/profile", routes.profile);
+app.use("/messages", routes.messages);
 app.use("/public/uploads/:filename", (req, res, next) => {
   res.sendFile(__dirname + "/public/uploads/" + req.params.filename);
-});
-
-io.on("connection", (socket) => {
-  console.log("a user connected");
-
-  socket.on("send_message", (data) => {
-    io.emit("receive_message", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
 });
 
 server.listen(PORT, (error) => {

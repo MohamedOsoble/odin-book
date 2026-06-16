@@ -74,7 +74,7 @@ exports.popularPosts = async (req, res, next) => {
 };
 
 exports.postsByFollowing = async (req, res, next) => {
-  const posts = await postDb.postsByFollowing(req.user);
+  const posts = await postDb.postsByFollowing(req.user.id);
   return res.json(posts);
 };
 
@@ -90,7 +90,7 @@ exports.recentPosts = async (req, res, next) => {
 };
 
 exports.likePost = async (req, res, next) => {
-  const userId = req.user;
+  const userId = req.user.id;
   const postId = req.params.postid;
 
   // Shouldn't have to confirm here, should be validated before the query is called, not my responsibility

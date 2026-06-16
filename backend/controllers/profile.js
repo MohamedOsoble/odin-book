@@ -8,6 +8,11 @@ const findUser = async (username) => {
   return user;
 };
 
+const getFriends = async (userId) => {
+  const friends = await dbProfile.getFriends(userId);
+  return friends;
+};
+
 exports.getProfile = async (req, res, next) => {
   const user = await findUser(req.params.username);
   const profileData = await dbProfile.getProfile(user.id);

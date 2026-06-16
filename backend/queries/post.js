@@ -121,6 +121,7 @@ exports.recent = async () => {
   const post = await prisma.post.findMany({
     include: {
       author: { include: { profile: { include: { user: true } } } },
+      likedby: true,
       _count: {
         select: {
           likedby: true,
@@ -141,7 +142,7 @@ exports.recent = async () => {
 
 exports.likePost = async (userId, postId) => {
   const isConnected = await prisma.post.findFirst({
-    where: { id: postId, likedby: { some: { id: userId } } },
+    where: { id: postId, likedby: { some: { id: { equals: userId } } } },
   });
 
   if (isConnected != null) {
@@ -153,6 +154,7 @@ exports.likePost = async (userId, postId) => {
         likedby: { disconnect: { id: userId } },
       },
       include: {
+        likedby: true,
         _count: {
           select: {
             likedby: true,
@@ -170,6 +172,7 @@ exports.likePost = async (userId, postId) => {
         likedby: { connect: { id: userId } },
       },
       include: {
+        likedby: true,
         _count: {
           select: {
             likedby: true,

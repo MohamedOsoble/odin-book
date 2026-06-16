@@ -30,20 +30,20 @@ export const links = () => [
 export function Layout({ children }) {
   return (
     <ThemeProvider>
-      <html data-theme="black">
+      <html data-theme="black" className="h-screen">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <Meta />
           <Links />
         </head>
-        <body>
+        <body className="flex flex-col h-screen">
           <header className="flex flex-col place-items-center gap-9">
             <div className="w-[500px] max-w-[100vw] p-4">
               <h1 className="text-5xl font-mono font-bold">The Odin Book</h1>
             </div>
           </header>
-          <div className="flex flex-col items-center">{children}</div>
+          <div className="flex flex-col items-center h-full">{children}</div>
           <ScrollRestoration />
           <Scripts />
         </body>

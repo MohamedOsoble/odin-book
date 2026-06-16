@@ -5,8 +5,8 @@ export default function FileUpload(img, file) {
 }
 
 export function dateToInput(date) {
-  const inputDate = new Date(date);
-  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  const d = new Date(date);
+  return d.toISOString().split("T")[0];
 }
 
 export function capitalizeFirst(string) {
@@ -18,8 +18,14 @@ export function stringMaxLength(string, n) {
 }
 
 export const socket = io("http://localhost:3000", {
+  autoConnect: false,
   withCredentials: true,
-  extraHeaders: {
-    "my-custom-header": "abcd",
-  },
 });
+
+export function chatDate(date) {
+  const d = new Date(date);
+  return d.toLocaleString("en-GB", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}

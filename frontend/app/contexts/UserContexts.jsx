@@ -26,6 +26,9 @@ function UserProvider(props) {
         if (response.data.user) {
           setUser(response.data.user);
           setIsLoading(false);
+        } else {
+          setUser(false);
+          setIsLoading(false);
         }
       })
       .catch((error) => {

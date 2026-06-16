@@ -2,11 +2,14 @@ import { useLoaderData } from "react-router";
 import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
 import Post from "../../components/Post";
-import { dateToInput } from "../../utils/utility";
 import { useUser } from "../../contexts/UserContexts";
 import { PostComment } from "../../components/Comment";
 import { LoadingComponent } from "../../components/Loading";
-import { stringMaxLength, capitalizeFirst } from "../../utils/utility";
+import {
+  stringMaxLength,
+  capitalizeFirst,
+  dateToInput,
+} from "../../utils/utility";
 
 export async function clientLoader({ params }) {
   const profileData = await API.getProfile(params.username);
@@ -53,7 +56,13 @@ function LoadComments({ comments }) {
 }
 
 // This is going to take more work, fix edit profile first and move this to another file, combine image uploads in general...
-function UploadAvatar({ username, setChangeAvatar, profile, setProfile }) {
+function UploadAvatar({
+  username,
+  setChangeAvatar,
+  profile,
+  setProfile,
+  setPreview,
+}) {
   const verifyFileType = (file) => {
     const arr = file.type.split("/");
     return arr[0] === "image";
@@ -74,21 +83,37 @@ function UploadAvatar({ username, setChangeAvatar, profile, setProfile }) {
     }
   };
 
+  const handleCancel = (e) => {
+    setPreview("");
+    setChangeAvatar(false);
+  };
+
+  const handlePreview = (e) => {
+    const [file] = e.target.files;
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   return (
     <div className="flex flex-col max-w-35">
       <form className="flex flex-col" onSubmit={handleUpload}>
-        <input id="avatar" name="avatar" type="file" />
-        <button className="btn w-25" type="submit">
-          Upload
-        </button>
-        <button
-          className="btn w-25"
-          onClick={() => {
-            setChangeAvatar(false);
-          }}
-        >
-          Cancel
-        </button>
+        <input
+          className="btn btn-sm mt-2"
+          accept="image/*"
+          id="avatar"
+          name="avatar"
+          type="file"
+          onChange={handlePreview}
+        />
+        <div className="flex flex-row">
+          <button className="btn btn-xs m-3" type="submit">
+            Upload
+          </button>
+          <button className="btn btn-xs m-3" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -106,6 +131,8 @@ function FollowButton({ isFollowing, onClick }) {
 
 function ProfileCard({
   profile,
+  avatarSrc,
+  setProfile,
   setEditing,
   isFollowing,
   setIsFollowing,
@@ -117,7 +144,6 @@ function ProfileCard({
         ? await API.follow(profile.user.username, "unfollow")
         : await API.follow(profile.user.username, "follow");
       if (response) {
-        console.log(response);
         setIsFollowing(!isFollowing);
       }
     } catch (err) {
@@ -129,12 +155,12 @@ function ProfileCard({
     <div className="max-w-xl min-w-2xl flex-col justify-items-center border-2 border-solid rounded-md">
       <div className="flex flex-row min-w-xl mt-10 ml-5 ">
         <div className="flex flex-col">
-          {" "}
           <img
-            src={`${import.meta.env.VITE_API}${profile.avatar}`}
+            id="profile-avatar"
+            src={avatarSrc}
             className="rounded-4xl w-35 object-scale-down"
           ></img>{" "}
-          {user && user.id === profile.user.userId ? (
+          {user && user.id === profile.user.id ? (
             <button className="btn" onClick={() => setEditing(true)}>
               Edit Profile
             </button>
@@ -156,7 +182,7 @@ function ProfileCard({
             <p className="">
               <strong>Bio: </strong>
             </p>
-            <p> {profile.bio}</p>
+            <p> {" " + profile.bio}</p>
           </div>
 
           <p>
@@ -195,7 +221,14 @@ function ProfileCard({
   );
 }
 
-function EditProfile({ profile, setProfile, setEditing }) {
+function EditProfile({
+  profile,
+  avatarSrc,
+  setProfile,
+  setEditing,
+  preview,
+  setPreview,
+}) {
   const [details, setDetails] = useState(profile);
   const [changeAvatar, setChangeAvatar] = useState(false);
 
@@ -216,18 +249,28 @@ function EditProfile({ profile, setProfile, setEditing }) {
   };
 
   return (
-    <div className="p-5 max-w-xl min-w-2xl flex flex-row justify-items-center border-2 border-solid rounded-md">
+    <div className="p-5 min-w-2xl flex flex-row justify-items-center border-2 border-solid rounded-md">
       <div className="flex flex-col p-5">
-        <img
-          src={`${import.meta.env.VITE_API}${profile.avatar}`}
-          className="rounded-4xl w-35 object-scale-down"
-        ></img>{" "}
+        {preview ? (
+          <img
+            id="avatar-preview"
+            src={preview}
+            className="rounded-4xl w-35 object-scale-down"
+          ></img>
+        ) : (
+          <img
+            id="profile-avatar"
+            src={avatarSrc}
+            className="rounded-4xl w-35 object-scale-down"
+          ></img>
+        )}
         {changeAvatar ? (
           <UploadAvatar
             username={profile.user.username}
             profile={profile}
             setProfile={setProfile}
             setChangeAvatar={setChangeAvatar}
+            setPreview={setPreview}
           />
         ) : (
           <button
@@ -240,24 +283,28 @@ function EditProfile({ profile, setProfile, setEditing }) {
           </button>
         )}
       </div>
-      <form className="flex flex-col" onSubmit={handleSubmit}>
-        <div>
+      <form
+        className="flex flex-col h-full justify-evenly"
+        onSubmit={handleSubmit}
+      >
+        <div className="flex flex-row">
           {" "}
           <label for="name">Name:</label>
           <input
             name="name"
+            className="ml-3 border border-default-medium rounded-md"
             type="text"
             placeholder={profile.name}
             onChange={handleChange}
             value={details.name ? details.name : ""}
           ></input>
         </div>
-        <div>
+        <div className="flex flex-row">
           <label for="bio">Bio: </label>
           <textarea
             name="bio"
             className="border border-default-medium rounded-md text-heading   
-            text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
+            text-sm rounded-base focus:ring-brand focus:border-brand block w-75 px-3 
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
             maxLength={150}
             rows={4}
@@ -272,13 +319,21 @@ function EditProfile({ profile, setProfile, setEditing }) {
             name="dob"
             type="date"
             placeholder={profile.dob}
-            value={details.dob ? details.dob : ""}
+            value={details.dob ? dateToInput(details.dob) : ""}
             onChange={handleChange}
           />
         </div>
         <div>
           <button className="btn" type="submit">
             Save
+          </button>
+          <button
+            className="btn"
+            onClick={() => {
+              setEditing(false);
+            }}
+          >
+            Cancel
           </button>
         </div>
       </form>
@@ -390,8 +445,11 @@ export default function Profile({ loaderData }) {
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loaderData.profile);
+  const avatarSrc = `${import.meta.env.VITE_API}${loaderData.profile.avatar}`;
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentTab, setCurrentTab] = useState("Posts");
+  const [preview, setPreview] = useState("");
   const { user, isLoading } = useUser();
 
   useEffect(() => {
@@ -407,21 +465,26 @@ export default function Profile({ loaderData }) {
     return <LoadingComponent />;
   }
   return (
-    <div>
+    <div className="mt-10">
       {editing ? (
         <EditProfile
           profile={profile}
+          avatarSrc={avatarSrc}
           setProfile={setProfile}
           setEditing={setEditing}
+          preview={preview}
+          setPreview={setPreview}
           user={user}
         />
       ) : (
         <ProfileCard
           profile={profile}
+          avatarSrc={avatarSrc}
           setProfile={setProfile}
           setEditing={setEditing}
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
+          preview={preview}
           user={user}
         />
       )}

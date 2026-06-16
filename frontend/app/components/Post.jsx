@@ -14,6 +14,7 @@ export default function Post({ post, author }) {
 
   const handleLike = async (e) => {
     const response = await likePost(post.id);
+    console.log(response);
     setLikes(response.data.likedby.length);
   };
 
