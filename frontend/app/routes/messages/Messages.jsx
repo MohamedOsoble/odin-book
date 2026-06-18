@@ -78,7 +78,13 @@ function recipientFromArray(conversation, currentUserId) {
   return conversation.users.filter((user) => user.id != currentUserId);
 }
 
-function FriendsMenu({ friends, setCurrentChat }) {
+function FriendsMenu({ friends, setCurrentChat, onlineUsers }) {
+  console.log(onlineUsers);
+  const isOnline = (friendId) => {
+    console.log(onlineUsers);
+    return onlineUsers.some((user) => user.userId === friendId);
+  };
+
   const UserPanel = ({ friend }) => {
     return (
       <li
@@ -95,6 +101,7 @@ function FriendsMenu({ friends, setCurrentChat }) {
         </div>
         <div>
           <div>{friend.username}</div>
+          {isOnline(friend.id) ? <p>Online!</p> : <p>Offline!</p>}
           <div className="text-xs uppercase font-semibold opacity-60">
             {friend.conversations.length > 0
               ? friend.conversations[0][0]
@@ -158,25 +165,16 @@ function ChatBox({ targetUser, currentUser, setError, setCurrentChat }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState(targetUser.id);
-  console.log(targetUser);
 
   useEffect(() => {
-    socket.auth = { user: currentUser, recipient: targetUser };
-    socket.connect();
     socket.emit("start_chat", targetUser.id);
 
     socket.on("receive_message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
 
-    // Currently not being used
-    // socket.on("users", (data) => {
-    //   console.log(data);
-    // });
-
     socket.on("connect_error", (err) => {
       setError("A connection error has occured...");
-      console.log(err);
     });
 
     socket.on("chat_history", (data) => {
@@ -185,8 +183,6 @@ function ChatBox({ targetUser, currentUser, setError, setCurrentChat }) {
 
     return () => {
       setMessages([]);
-      socket.disconnect();
-      socket.off("receive_message");
     };
   }, [targetUser]);
 
@@ -257,12 +253,36 @@ function ChatBox({ targetUser, currentUser, setError, setCurrentChat }) {
 export default function App({ loaderData }) {
   const [showFriends, setShowFriends] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [error, setError] = useState("");
   const { currentUser, isLoading } = useUser();
+
+  useEffect(() => {
+    if (!isLoading) {
+      socket.auth = { user: currentUser };
+
+      socket.connect();
+
+      socket.on("users", (users) => {
+        setOnlineUsers(users);
+      });
+    }
+
+    socket.on("connect", (users) => {
+      setOnlineUsers(users);
+    });
+
+    return () => {
+      socket.disconnect();
+      socket.off("receive_message");
+    };
+  }, [isLoading]);
 
   if (isLoading) {
     return <LoadingComponent />;
   }
+
+  console.log(onlineUsers);
 
   return (
     <div className="flex flex-row w-full h-full">
@@ -294,6 +314,7 @@ export default function App({ loaderData }) {
           <FriendsMenu
             friends={loaderData.data.followers}
             setCurrentChat={setCurrentChat}
+            onlineUsers={onlineUsers}
           />
         )}
       </div>

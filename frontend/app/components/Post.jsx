@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { likePost, deletePost } from "../api/posts";
 import { chatDate } from "../utils/utility";
 import { LoadingComponent } from "./Loading";
+import { useNavigate } from "react-router";
 
 const API_URL = `${import.meta.env.VITE_API}`;
 
@@ -50,6 +51,7 @@ function Post({ post, author, currentUser }) {
   const [likes, setLikes] = useState(post.likedby);
   const [commenting, setCommenting] = useState(false);
   const [likedByMe, setLikedByMe] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (likes.some((x) => x.id === currentUser.id)) {
@@ -59,6 +61,9 @@ function Post({ post, author, currentUser }) {
     }
   }, [likes]);
 
+  const refresh = () => {
+    navigate(0);
+  };
   const handleLike = async (e) => {
     const response = await likePost(post.id);
     setLikes(response.data.likedby);
@@ -66,6 +71,9 @@ function Post({ post, author, currentUser }) {
 
   const handleDelete = async (e) => {
     const response = await deletePost(post.id);
+    if (response) {
+      refresh();
+    }
     // Make a notification that the post has been deleted...
   };
 

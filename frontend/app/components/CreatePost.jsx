@@ -1,23 +1,27 @@
 import { useState } from "react";
 import { create } from "../api/posts";
-import { useNavigate } from "react-router";
+import { redirect } from "react-router";
+import { useUser } from "../contexts/UserContexts";
+import { LoadingComponent } from "./Loading";
 
-export default function createPost(currentUser) {
+export default function createPost() {
   const [content, setContent] = useState("");
   const [errors, setErrors] = useState(false);
-  const navigate = useNavigate();
+  const { currentUser, isLoading } = useUser();
 
-  const refreshPage = () => {
-    navigate(0);
-  };
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+
   if (currentUser) {
-    return PostForm(
-      currentUser,
-      content,
-      setContent,
-      errors,
-      setErrors,
-      refreshPage,
+    return (
+      <PostForm
+        currentUser={currentUser}
+        content={content}
+        setContent={setContent}
+        errors={errors}
+        setErrors={setErrors}
+      />
     );
   } else {
     return (
@@ -37,21 +41,20 @@ export default function createPost(currentUser) {
   }
 }
 
-export function PostForm(
+export function PostForm({
   currentUser,
   content,
   setContent,
   errors,
   setErrors,
-  refreshPage,
-) {
+}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (content.length > 150) {
+    if (content.length > 300 || content.length < 3) {
       setErrors(true);
     } else {
       const response = await create(currentUser.id, content);
-      refreshPage();
+      redirect("/post/" + response.data.id);
     }
   };
 
@@ -65,18 +68,27 @@ export function PostForm(
 
   return (
     <div className="flex flex-col">
-      <h2 className="pb-2 underline">Create new post: </h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <textarea
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Create Post: </legend>
+            <textarea
+              className="textarea h-24 resize-none"
+              maxLength={300}
+              rows={4}
+              placeholder="What's on your mind..."
+              onChange={handleChange}
+            ></textarea>
+          </fieldset>
+          {/* <textarea
             className="border border-default-medium rounded-md text-heading 
             text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
-            maxLength={150}
+            maxLength={300}
             rows={4}
             placeholder="What's on your mind..."
             onChange={handleChange}
-          />
+          /> */}
           {errors ? (
             <p className=" w-inherit justify-self-center">
               Post content is too long
