@@ -27,7 +27,15 @@ exports.getPost = async (postId) => {
       id: postId,
     },
     include: {
-      comments: { include: { author: { include: { profile: true } } } },
+      comments: {
+        where: { parentCommentId: null },
+        include: {
+          author: { include: { profile: true } },
+          replies: {
+            include: { author: { include: { profile: true } } },
+          },
+        },
+      },
       likedby: true,
       author: { include: { profile: { include: { user: true } } } },
       _count: { select: { likedby: true } },

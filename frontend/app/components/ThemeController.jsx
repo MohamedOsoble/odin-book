@@ -22,6 +22,16 @@ export default function ThemeController(Theme) {
               </button>
             </li>
             <li>
+              <button onClick={handleClick} value="dracula">
+                Dracula
+              </button>
+            </li>
+            <li>
+              <button onClick={handleClick} value="business">
+                Business
+              </button>
+            </li>
+            <li>
               <button onClick={handleClick} value="dark">
                 Dark
               </button>

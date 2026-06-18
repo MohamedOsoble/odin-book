@@ -1,21 +1,10 @@
 import { getPost } from "../../api/posts";
 import Post from "../../components/Post";
-import { PostComment } from "../../components/Comment";
+import { PostCommentCard, CommentSection } from "../../components/Comment";
 
 export async function clientLoader({ params }) {
   const response = await getPost(params.postId);
   return response.data;
-}
-
-export function CommentSection({ comments }) {
-  console.log(comments);
-  return (
-    <div>
-      {comments.map((comment) => {
-        return <PostComment comment={comment} />;
-      })}
-    </div>
-  );
 }
 
 export default function ViewPost({ loaderData }) {
@@ -27,7 +16,7 @@ export default function ViewPost({ loaderData }) {
 
   return (
     <div>
-      <Post author={author} post={loaderData} />
+      <Post postList={[loaderData]} />
       <CommentSection comments={loaderData.comments} />
     </div>
   );

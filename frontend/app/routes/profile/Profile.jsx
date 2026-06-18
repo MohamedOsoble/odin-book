@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
 import PostList from "../../components/Post";
 import { useUser } from "../../contexts/UserContexts";
-import { PostComment } from "../../components/Comment";
+import { PostCommentCard } from "../../components/Comment";
 import { LoadingComponent } from "../../components/Loading";
 import {
   stringMaxLength,
@@ -47,7 +47,7 @@ function LoadComments({ comments }) {
     return (
       <div>
         {comments.map((comment) => {
-          return <PostComment comment={comment} />;
+          return <PostCommentCard comment={comment} />;
         })}
       </div>
     );

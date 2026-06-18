@@ -7,152 +7,61 @@ import { LoadingComponent } from "./Loading";
 
 const API_URL = `${import.meta.env.VITE_API}`;
 
-export function Post2({ post, author }) {
-  const { currentUser } = useUser();
-  const [likes, setLikes] = useState(post.likedby.length);
-  const [commenting, setCommenting] = useState(false);
-
-  const handleLike = async (e) => {
-    const response = await likePost(post.id);
-    setLikes(response.data.likedby.length);
-  };
-
-  const handleDelete = async (e) => {
-    const response = await deletePost(post.id);
-    // Make a notification that the post has been deleted...
-  };
-
-  const handleComment = (e) => {
-    setCommenting(!commenting);
-  };
-
-  const handleShare = (e) => {
-    // Currently not implemented, might do in a future update...
-  };
-
-  return (
-    <div key={post.id}>
-      <div
-        className="flex flex-col rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4 m-5 justify-between"
-        key={post.id}
+function LikeSvg({ liked }) {
+  if (liked) {
+    return (
+      <svg
+        className="size-[1.2em]"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
       >
-        <div className="min-w-xl">
-          <a
-            href={"/profile/" + author.username}
-            className="flex flex-row justify-items-center items-center justify-between w-33"
-          >
-            <img
-              src={`${API_URL}${author.avatar}`}
-              className="rounded-4xl w-15 object-scale-down"
-            ></img>
-            <b>{author.name}</b>
-          </a>
-        </div>
-        <a href={"/post/" + post.id}>
-          <p>{post.content}</p>
-        </a>
-        {currentUser ? (
-          <div className="flex">
-            <button
-              className="btn rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-              type="submit"
-              onClick={handleLike}
-            >
-              Like
-            </button>
-            <button
-              className="btn rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-              type="submit"
-              onClick={() => {
-                setCommenting(!commenting);
-              }}
-            >
-              Comment
-            </button>
-            <button
-              className="btn rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-              type="submit"
-              onClick={handleShare}
-            >
-              Share
-            </button>
-            {currentUser.id === author.id ? (
-              <>
-                <button
-                  className="btn text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-                  onClick={() =>
-                    document.getElementById("delete_modal").showModal()
-                  }
-                >
-                  Delete
-                </button>
-                <dialog id="delete_modal" className="modal">
-                  <div className="modal-box">
-                    <h3 className="text-lg font-bold">Delete Post?</h3>
-                    <p className="py-4">
-                      Please note that this action cannot be undone.
-                    </p>
-                    <div className="modal-action">
-                      <form method="dialog">
-                        <button
-                          className="btn text-green-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-                          type="submit"
-                          onClick={() =>
-                            document.getElementById("delete_modal").close()
-                          }
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="btn text-red-500 rounded-lg border border-gray-100 p-2 dark:border-gray-700 space-y-4 m-5"
-                          type="submit"
-                          onClick={handleDelete}
-                        >
-                          Delete Post
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </dialog>
-              </>
-            ) : null}
-          </div>
-        ) : (
-          <p className="text-xs text-gray-500">
-            Please <a href="/login">Login</a> to like or comment on this post
-          </p>
-        )}
-
-        <p className="text-xs text-gray-500">Likes: {likes}</p>
-        <p className="text-xs text-gray-500">
-          Created:
-          {chatDate(post.createdAt)}
-        </p>
-      </div>
-      {commenting ? (
-        <CreateComment postId={post.id} setCommenting={setCommenting} />
-      ) : null}
-    </div>
+        <g
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          strokeWidth="2"
+          fill="red"
+          stroke="currentColor"
+        >
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+        </g>
+      </svg>
+    );
+  }
+  return (
+    <svg
+      className="size-[1.2em]"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+    >
+      <g
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        strokeWidth="2"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+      </g>
+    </svg>
   );
 }
 
 function Post({ post, author, currentUser }) {
-  const [likes, setLikes] = useState(post.likedby.length);
+  const [likes, setLikes] = useState(post.likedby);
   const [commenting, setCommenting] = useState(false);
   const [likedByMe, setLikedByMe] = useState(false);
-  console.log(post);
 
   useEffect(() => {
-    if (post.likedby.some((x) => x.id === currentUser.id)) {
+    if (likes.some((x) => x.id === currentUser.id)) {
       setLikedByMe(true);
     } else {
       setLikedByMe(false);
     }
-  }, [post.likedby]);
+  }, [likes]);
 
   const handleLike = async (e) => {
     const response = await likePost(post.id);
-    setLikes(response.data.likedby.length);
+    setLikes(response.data.likedby);
   };
 
   const handleDelete = async (e) => {
@@ -194,22 +103,8 @@ function Post({ post, author, currentUser }) {
 
       <div>
         <button className="btn btn-square btn-ghost" onClick={handleLike}>
-          <svg
-            className="size-[1.2em]"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill={likedByMe ? "red" : "none"}
-              stroke="currentColor"
-            >
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-            </g>
-          </svg>
-          <p className="text-xs text-gray-500">{likes}</p>
+          <LikeSvg liked={likedByMe} />
+          <p className="text-xs text-gray-500">{likes.length}</p>
         </button>
       </div>
       <div>
@@ -224,9 +119,9 @@ function Post({ post, author, currentUser }) {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             class="lucide lucide-message-circle"
             aria-hidden="true"
           >
@@ -241,7 +136,7 @@ function Post({ post, author, currentUser }) {
             <button
               className="btn btn-square btn-ghost items-center content-center"
               onClick={() =>
-                document.getElementById("delete_modal").showModal()
+                document.getElementById(post.id + "_delete_modal").showModal()
               }
             >
               <svg
@@ -259,7 +154,7 @@ function Post({ post, author, currentUser }) {
             </button>
           </div>
 
-          <dialog id="delete_modal" className="modal">
+          <dialog id={post.id + "_delete_modal"} className="modal">
             <div className="modal-box">
               <h3 className="text-lg font-bold">Delete Post?</h3>
               <p className="py-4">
