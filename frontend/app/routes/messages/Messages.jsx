@@ -154,7 +154,7 @@ function ConversationsMenu({ conversations, currentUserId, setCurrentChat }) {
   );
 }
 
-function ChatBox({ targetUser, currentUser, setError }) {
+function ChatBox({ targetUser, currentUser, setError, setCurrentChat }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState(targetUser.id);
@@ -207,16 +207,27 @@ function ChatBox({ targetUser, currentUser, setError }) {
         id="chat-container"
         className="flex flex-col justify-between align-center h-full w-full"
       >
-        <div id="chat-header" className="flex flex-row border-1 items-center">
-          <img
-            className="size-10 rounded-box"
-            src={API_URL + targetUser.profile.avatar}
-          />
+        <div className="flex flex-row justify-between">
+          <div id="chat-header" className="flex flex-row items-center">
+            <img
+              className="size-10 rounded-box"
+              src={API_URL + targetUser.profile.avatar}
+            />
 
-          <div className="">
-            <h1>{targetUser.username}</h1>
+            <div className="">
+              <h1>{targetUser.username}</h1>
+            </div>
           </div>
+          <button
+            className="btn"
+            onClick={() => {
+              setCurrentChat(null);
+            }}
+          >
+            X
+          </button>
         </div>
+
         <div id="chat-body" className="overflow-y-scroll">
           <Chat
             currentUser={currentUser}
@@ -277,6 +288,7 @@ export default function App({ loaderData }) {
             targetUser={currentChat}
             currentUser={currentUser}
             setError={setError}
+            setCurrentChat={setCurrentChat}
           />
         ) : (
           <FriendsMenu
