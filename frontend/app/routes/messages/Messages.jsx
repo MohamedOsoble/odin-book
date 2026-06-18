@@ -158,9 +158,10 @@ function ChatBox({ targetUser, currentUser, setError }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState(targetUser.id);
+  console.log(targetUser);
 
   useEffect(() => {
-    socket.auth = { currentUser, targetUser };
+    socket.auth = { user: currentUser, recipient: targetUser };
     socket.connect();
     socket.emit("start_chat", targetUser.id);
 
@@ -217,7 +218,11 @@ function ChatBox({ targetUser, currentUser, setError }) {
           </div>
         </div>
         <div id="chat-body" className="overflow-y-scroll">
-          <Chat user={currentUser} recipient={targetUser} messages={messages} />
+          <Chat
+            currentUser={currentUser}
+            targetUser={targetUser}
+            messages={messages}
+          />
           <div name="message-input" id="message-input" className="">
             <input
               type="text"
@@ -255,7 +260,7 @@ export default function App({ loaderData }) {
         {loaderData.data.conversations.length > 0 ? (
           <ConversationsMenu
             conversations={loaderData.data.conversations}
-            userId={currentUser.id}
+            currentUserId={currentUser.id}
             setCurrentChat={setCurrentChat}
           />
         ) : (
@@ -269,8 +274,8 @@ export default function App({ loaderData }) {
         {error ? <Alert message={error} setState={setError} /> : null}
         {currentChat ? (
           <ChatBox
-            recipient={currentChat}
-            user={currentUser}
+            targetUser={currentChat}
+            currentUser={currentUser}
             setError={setError}
           />
         ) : (

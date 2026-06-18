@@ -58,6 +58,7 @@ module.exports = function chatServer(expressApp, origin) {
   });
 
   io.on("connection", async (socket) => {
+    console.log(socket.handshake);
     const user = socket.handshake.auth.user;
     const recipient = socket.handshake.auth.recipient;
     const chat = await getChat(user.id, recipient.id);
