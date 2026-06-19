@@ -100,8 +100,8 @@ export function CommentBox({
             className="border border-default-medium rounded-md text-heading 
             text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
             py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
-            maxLength={150}
-            minLength={2}
+            maxLength={300}
+            minLength={3}
             rows={4}
             value={content}
             onChange={(e) => {
@@ -111,7 +111,7 @@ export function CommentBox({
           />
           {errors ? (
             <p className=" w-inherit justify-self-center">
-              Comment length must be between 2 and 150 characters...
+              Comment length must be between 3 and 300 characters...
             </p>
           ) : null}
           <div
