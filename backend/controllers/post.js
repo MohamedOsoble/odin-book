@@ -2,7 +2,6 @@ const postDb = require("../queries/post");
 const commentDb = require("../queries/comment");
 const validate = require("../validators/post");
 
-// Dont think this will be needed
 exports.all = async (req, res, next) => {
   const posts = await postDb.all();
   return res.json(posts);
@@ -93,7 +92,6 @@ exports.likePost = async (req, res, next) => {
   const userId = req.user.id;
   const postId = req.params.postid;
 
-  // Shouldn't have to confirm here, should be validated before the query is called, not my responsibility
   if (userId && postId) {
     const post = await postDb.likePost(userId, postId);
     return res.json(post);
