@@ -1,5 +1,4 @@
 import { useLoaderData } from "react-router";
-import { allPosts } from "../../utils/placeholderPosts";
 import * as API from "../../api/posts";
 import PostList from "../../components/Post";
 import CreatePost from "../../components/CreatePost";
@@ -9,19 +8,15 @@ import { Outlet } from "react-router";
 
 export async function clientLoader({ params }) {
   const param = params.route;
-  console.log(param);
   let response;
   switch (param) {
     case "recent":
-      console.log("Recent Route");
       return await API.recent();
       break;
     case "following":
-      console.log("Following Route");
       return await API.following();
       break;
     default:
-      console.log("Default route");
       return await API.popular();
   }
 }
