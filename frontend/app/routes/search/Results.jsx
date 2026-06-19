@@ -12,7 +12,7 @@ export async function clientLoader({ params }) {
   return response;
 }
 
-function Usercard({ targetUser, currentUser }) {
+function Usercard({ targetUser, currentUser, setError }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const handleFollow = async (e) => {
     try {
@@ -23,7 +23,9 @@ function Usercard({ targetUser, currentUser }) {
         setIsFollowing(!isFollowing);
       }
     } catch (err) {
-      console.error(err);
+      isFollowing
+        ? setError("Failed to follow the user, please refresh and try again")
+        : setError("Failed to unfollow the user, please refresh and try again");
     }
   };
 
@@ -64,6 +66,7 @@ function Usercard({ targetUser, currentUser }) {
 
 export default function Results({ params, loaderData }) {
   const usersList = loaderData.data;
+  const [error, setError] = useState(false);
   const { currentUser, isLoading } = useUser();
 
   if (isLoading) {
@@ -71,6 +74,7 @@ export default function Results({ params, loaderData }) {
   }
   return (
     <div className="flex flex-col">
+      {error ? <Alert message={error} setState={setError} /> : null}
       <h1 className="text-2xl">Search Results:</h1>
       <ul className="list bg-base-100 rounded-box shadow-md">
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide" key="header">
@@ -83,6 +87,7 @@ export default function Results({ params, loaderData }) {
                   targetUser={user}
                   currentUser={currentUser}
                   key={user.id}
+                  setError={setError}
                 />
               );
             })
