@@ -18,6 +18,6 @@ exports.newPost = [
   body("content")
     .notEmpty()
     .withMessage("Content must be supplied, cannot make an empty post")
-    .isLength({ max: 140 })
-    .withMessage("Max length of post is 140 characters..."),
+    .isLength({ max: 300 })
+    .withMessage("Max length of post is 300 characters..."),
 ];

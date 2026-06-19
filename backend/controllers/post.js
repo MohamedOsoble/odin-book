@@ -32,8 +32,8 @@ exports.deletePostRequest = async (req, res, next) => {
   const post = await postDb.getPost(postId);
   if (post.author.id === userId) {
     try {
-      const post = await deletePost(postId);
-      return res.json(post);
+      const response = await deletePost(postId);
+      return res.json(response);
     } catch (err) {
       console.log(err);
       return res.json(err);
@@ -110,4 +110,27 @@ exports.createComment = async (req, res, next) => {
 exports.createReply = async (req, res, next) => {
   const reply = await commentDb.createReply(req.body);
   return res.json(reply);
+};
+
+exports.deleteComment = async (commentId) => {
+  const comment = commentDb.deleteComment(commentId);
+  return res.json(comment);
+};
+
+exports.deleteCommentRequest = async (req, res, next) => {
+  const userId = req.user.id;
+  const commentId = req.params.commentId;
+  const comment = await commentDb.getComment(commentId);
+  if (comment.authorId === userId) {
+    try {
+      const response = await this.deleteComment(commentId);
+      return res.json(comment);
+    } catch (err) {
+      return res.json(err);
+    }
+  } else {
+    return res.status(400).json({
+      msg: "You are not authorized to delete this comment",
+    });
+  }
 };

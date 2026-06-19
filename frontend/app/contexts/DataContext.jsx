@@ -10,7 +10,6 @@ function DataProvider({ children }) {
   // get posts data
   useEffect(() => {
     axios.get("https://jsonplaceholder.typicode.com/posts").then((response) => {
-      console.log("API Called...");
       const { data } = response;
       setData({ posts: data });
     });

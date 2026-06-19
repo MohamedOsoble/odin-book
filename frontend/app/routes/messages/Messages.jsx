@@ -282,8 +282,6 @@ export default function App({ loaderData }) {
     return <LoadingComponent />;
   }
 
-  console.log(onlineUsers);
-
   return (
     <div className="flex flex-row w-full h-full">
       <div name="side-menu" className="basis-50">

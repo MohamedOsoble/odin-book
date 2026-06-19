@@ -1,9 +1,5 @@
 import { io } from "socket.io-client";
 
-export default function FileUpload(img, file) {
-  //
-}
-
 export function dateToInput(date) {
   const d = new Date(date);
   return d.toISOString().split("T")[0];

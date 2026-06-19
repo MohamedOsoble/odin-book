@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { create } from "../api/posts";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 import { useUser } from "../contexts/UserContexts";
 import { LoadingComponent } from "./Loading";
 
@@ -48,13 +48,17 @@ export function PostForm({
   errors,
   setErrors,
 }) {
+  const navigate = useNavigate();
+  const redirect = (postId) => {
+    navigate("/post/" + postId);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (content.length > 300 || content.length < 3) {
       setErrors(true);
     } else {
       const response = await create(currentUser.id, content);
-      redirect("/post/" + response.data.id);
+      redirect(response.data.post.id);
     }
   };
 
@@ -80,15 +84,6 @@ export function PostForm({
               onChange={handleChange}
             ></textarea>
           </fieldset>
-          {/* <textarea
-            className="border border-default-medium rounded-md text-heading 
-            text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 
-            py-2.5 shadow-xs placeholder:text-body resize-none min-w-md"
-            maxLength={300}
-            rows={4}
-            placeholder="What's on your mind..."
-            onChange={handleChange}
-          /> */}
           {errors ? (
             <p className=" w-inherit justify-self-center">
               Post content is too long

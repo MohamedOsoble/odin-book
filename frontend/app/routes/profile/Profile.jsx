@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
 import PostList from "../../components/Post";
@@ -23,7 +23,6 @@ function LoadPosts(props) {
     username: profile.user.username,
     avatar: profile.avatar,
   };
-  console.log(posts);
 
   if (posts.length < 1) {
     return <h1>This user has not {empty} any posts</h1>;
@@ -153,14 +152,17 @@ function ProfileCard({
   return (
     <div className="max-w-xl min-w-2xl flex-col justify-items-center border-2 border-solid rounded-md">
       <div className="flex flex-row min-w-xl mt-10 ml-5 ">
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full justify-around">
           <img
             id="profile-avatar"
             src={avatarSrc}
             className="rounded-4xl w-35 object-scale-down"
           ></img>{" "}
           {currentUser && currentUser.id === profile.user.id ? (
-            <button className="btn" onClick={() => setEditing(true)}>
+            <button
+              className="btn btn-neutral mt-3"
+              onClick={() => setEditing(true)}
+            >
               Edit Profile
             </button>
           ) : null}
@@ -230,6 +232,7 @@ function EditProfile({
 }) {
   const [details, setDetails] = useState(profile);
   const [changeAvatar, setChangeAvatar] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -241,7 +244,7 @@ function EditProfile({
     const response = await API.updateProfile(profile.user.username, details);
     setEditing(false);
     if (response.status === 200) {
-      setProfile(response.data);
+      navigate(0);
     } else {
       // Some sort of error notification
     }
@@ -273,7 +276,7 @@ function EditProfile({
           />
         ) : (
           <button
-            className="btn"
+            className="btn btn-neutral mt-3"
             onClick={() => {
               setChangeAvatar(true);
             }}
@@ -323,11 +326,11 @@ function EditProfile({
           />
         </div>
         <div>
-          <button className="btn" type="submit">
+          <button className="btn btn-neutral" type="submit">
             Save
           </button>
           <button
-            className="btn"
+            className="btn btn-neutral m-2"
             onClick={() => {
               setEditing(false);
             }}

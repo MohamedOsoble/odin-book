@@ -12,7 +12,6 @@ export async function findUser(username) {
   const response = await axios
     .get(URL + "users/" + username)
     .catch(function (err) {
-      console.log(err);
       return err.response.data;
     });
   return response;
@@ -20,7 +19,6 @@ export async function findUser(username) {
 
 export async function findPosts(term) {
   const response = await axios.get(URL + "posts/" + term).catch(function (err) {
-    console.error(err);
     return err.response.data;
   });
   return response;

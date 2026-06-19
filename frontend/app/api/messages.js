@@ -10,7 +10,6 @@ const options = {
 
 export async function getMessageHome() {
   const response = await axios.get(URL, options).catch(function (err) {
-    console.log(err);
     return err.response.data;
   });
   return response;

@@ -4,6 +4,7 @@ import { submitComment } from "../api/posts";
 import { useUser } from "../contexts/UserContexts";
 import { chatDate } from "../utils/utility";
 import { LoadingComponent } from "./Loading";
+import * as API from "../api/posts";
 
 const API_URL = `${import.meta.env.VITE_API}`;
 
@@ -16,6 +17,10 @@ export function CreateComment({
   const [errors, setErrors] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useUser();
+
+  const redirect = () => {
+    navigate("/post/" + postId);
+  };
 
   // Assume validated prior to commenting
   const handleSubmit = async (e) => {
@@ -32,7 +37,7 @@ export function CreateComment({
       });
       setContent("");
       setCommenting(false);
-      return response;
+      redirect();
     }
   };
   return (
@@ -84,6 +89,8 @@ export function CommentBox({
   errors,
   handleSubmit,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col">
       <h2 className="pb-2 underline">Reply:</h2>
@@ -143,12 +150,20 @@ export function ReplyCommentCard({ comment, currentUser }) {}
 export function PostCommentCard({ comment, currentUser }) {
   const [replying, setReplying] = useState(false);
 
+  const navigate = useNavigate();
+
+  const redirect = () => {
+    navigate("/post/" + comment.postId);
+  };
+
   const handleReply = (e) => {
     setReplying(!replying);
   };
 
-  const handleDelete = (e) => {
-    console.log("to be deleted");
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    const response = await API.deleteComment(comment.id);
+    redirect();
   };
   return (
     <>
@@ -198,7 +213,6 @@ export function PostCommentCard({ comment, currentUser }) {
             >
               <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path>
             </svg>
-            {/* <p className="text-xs text-gray-500">{post.comments.length}</p> */}
           </button>
         </div>
         {currentUser.id === comment.author.id ? (
@@ -207,7 +221,9 @@ export function PostCommentCard({ comment, currentUser }) {
               <button
                 className="btn btn-square btn-ghost items-center content-center"
                 onClick={() =>
-                  document.getElementById("delete_modal").showModal()
+                  document
+                    .getElementById(comment.id + "_delete_modal")
+                    .showModal()
                 }
               >
                 <svg

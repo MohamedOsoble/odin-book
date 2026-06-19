@@ -21,6 +21,10 @@ router
   .put(controller.updatePost)
   .delete(auth.required, controller.deletePostRequest);
 
+router
+  .route("/comment/delete/:commentId")
+  .delete(auth.required, controller.deleteCommentRequest);
+
 router.get("/:postid/like", auth.required, controller.likePost);
 
 module.exports = router;
