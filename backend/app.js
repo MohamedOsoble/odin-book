@@ -36,9 +36,6 @@ app.use(
   }),
 );
 
-// temp home route
-app.get("/", (req, res) => res.send("Hello, world!"));
-
 const PORT = 3000;
 
 app.use("/user", routes.user);
