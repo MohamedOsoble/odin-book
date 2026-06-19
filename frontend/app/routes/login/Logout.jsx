@@ -9,7 +9,6 @@ export default function Logout() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // checks if user is logged in then logs them out and redirects
     if (currentUser) {
       logout();
     } else {

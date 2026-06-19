@@ -2,13 +2,6 @@ import { emptyPosts } from "../posts/posts";
 import Post from "../../components/Post";
 import { popular } from "../../api/posts";
 
-export function meta() {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
-
 export async function clientLoader() {
   const posts = await popular();
   return posts.data;

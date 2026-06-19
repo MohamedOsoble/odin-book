@@ -9,7 +9,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // checks if user is logged in
     if (currentUser) {
       redirectUser();
     }

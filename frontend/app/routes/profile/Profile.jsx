@@ -10,6 +10,7 @@ import {
   capitalizeFirst,
   dateToInput,
 } from "../../utils/utility";
+import { Alert } from "../../components/Error";
 
 export async function clientLoader({ params }) {
   const profileData = await API.getProfile(params.username);
@@ -171,9 +172,9 @@ function ProfileCard({
         <div className="max-w-2xl ml-12">
           <div className="flex flex-row justify-between">
             <h1 className="text-3xl">{profile.user.username}'s Profile</h1>
-            {currentUser.id === profile.user.id ? null : (
+            {currentUser && currentUser.id != profile.user.id ? (
               <FollowButton isFollowing={isFollowing} onClick={handleFollow} />
-            )}
+            ) : null}
           </div>
           <p>
             <strong>Name: </strong>{" "}
@@ -229,6 +230,7 @@ function EditProfile({
   setEditing,
   preview,
   setPreview,
+  setError,
 }) {
   const [details, setDetails] = useState(profile);
   const [changeAvatar, setChangeAvatar] = useState(false);
@@ -246,7 +248,7 @@ function EditProfile({
     if (response.status === 200) {
       navigate(0);
     } else {
-      // Some sort of error notification
+      setError("Failed to upload your avatar, please refresh and try again");
     }
   };
 
@@ -447,6 +449,7 @@ export default function Profile({ loaderData }) {
   const [selected, setSelected] = useState(null);
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loaderData.profile);
+  const [error, setError] = useState(false);
   const avatarSrc = `${import.meta.env.VITE_API}${loaderData.profile.avatar}`;
 
   const [isFollowing, setIsFollowing] = useState(false);
@@ -468,9 +471,11 @@ export default function Profile({ loaderData }) {
   }
   return (
     <div className="mt-10">
+      {error ? <Alert message={error} setState={setError} /> : null}
       {editing ? (
         <EditProfile
           profile={profile}
+          setError={setError}
           avatarSrc={avatarSrc}
           setProfile={setProfile}
           setEditing={setEditing}
