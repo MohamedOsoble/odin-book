@@ -13,8 +13,14 @@ export async function clientLoader() {
 }
 
 function Chat({ currentUser, targetUser, messages }) {
+  const messageRef = useRef(null);
+
+  useEffect(() => {
+    messageRef.current?.lastElementChild?.scrollIntoView();
+  }, [messages]);
+
   return (
-    <div name="messages" id="messages">
+    <div name="messages" id="messages" ref={messageRef}>
       {messages.map((msg, index) => (
         <div key={index}>
           {msg.user.id === currentUser.id ? (
@@ -79,9 +85,7 @@ function recipientFromArray(conversation, currentUserId) {
 }
 
 function FriendsMenu({ friends, setCurrentChat, onlineUsers }) {
-  console.log(onlineUsers);
   const isOnline = (friendId) => {
-    console.log(onlineUsers);
     return onlineUsers.some((user) => user.userId === friendId);
   };
 
@@ -121,7 +125,9 @@ function FriendsMenu({ friends, setCurrentChat, onlineUsers }) {
             <h1>Start a chat with one of your friends below!</h1>
           </li>
           {friends.map((friend) => {
-            return <UserPanel friend={friend.follower} />;
+            return (
+              <UserPanel key={friend.follower.id} friend={friend.follower} />
+            );
           })}
         </ul>
       ) : (
@@ -191,7 +197,7 @@ function ChatBox({ targetUser, currentUser, setError, setCurrentChat }) {
       socket.emit("send_message", { message, currentUser });
       setMessages((prev) => [
         ...prev,
-        { message: { message: message, time: Date.now() }, currentUser },
+        { message: { message: message, time: Date.now() }, user: currentUser },
       ]);
       setMessage("");
     }
