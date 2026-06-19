@@ -48,8 +48,6 @@ module.exports = function chatServer(expressApp, origin) {
     },
   });
 
-  const rooms = new Map();
-
   io.engine.use(cookieParser());
   io.engine.use((req, res, next) => {
     const isHandshake = req._query.sid === undefined;
@@ -61,7 +59,6 @@ module.exports = function chatServer(expressApp, origin) {
   });
 
   io.on("connection", async (socket) => {
-    console.log("connection requested");
     const user = socket.handshake.auth.user;
 
     const users = [];
