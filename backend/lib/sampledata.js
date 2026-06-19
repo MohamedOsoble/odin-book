@@ -73,9 +73,14 @@ async function createProfiles() {
       data: {
         bio: "Theres nothing here yet",
         userId: user.id,
+        name: user.username,
       },
     });
   }
 }
 
-// createProfiles();
+export default async function populateDatabase() {
+  await populateUsers(15);
+  await createProfiles();
+  await createPosts(35);
+}
