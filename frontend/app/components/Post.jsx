@@ -130,7 +130,7 @@ function Post({ post, author, currentUser }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            class="lucide lucide-message-circle"
+            className="lucide lucide-message-circle"
             aria-hidden="true"
           >
             <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path>
@@ -152,7 +152,7 @@ function Post({ post, author, currentUser }) {
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-trash"
+                className="bi bi-trash"
                 viewBox="0 0 16 16"
               >
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />

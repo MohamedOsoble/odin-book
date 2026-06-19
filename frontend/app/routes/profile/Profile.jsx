@@ -366,13 +366,17 @@ function FollowList({ followers, type, id }) {
             >
               <h3 className="card-title">{targetUser.username} </h3>
               <p> - {stringMaxLength(targetUser.profile.bio, 50)}</p>
-              <div className="card-actions justify-end"></div>
+              <div
+                className="card-actions justify-end"
+                key="card-actions"
+              ></div>
             </div>
           </div>
         </a>
       </div>
     );
   };
+
   return (
     <dialog id={id} className="modal">
       <div className="modal-box">
@@ -383,7 +387,9 @@ function FollowList({ followers, type, id }) {
         </h3>
         <div>
           {followers.map((follower) => {
-            return <Entry targetUser={follower[type]} />;
+            return (
+              <Entry key={follower[type].id} targetUser={follower[type]} />
+            );
           })}
         </div>
       </div>
