@@ -1,8 +1,8 @@
 require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const DbPrivate = require("./prisma").private;
-const DbPublic = require("./prisma").public;
+const DbPrivate = require("./prisma.js").private;
+const DbPublic = require("./prisma.js").public;
 const JwtStrategy = require("passport-jwt").Strategy;
 const AnonymousStrategy = require("passport-anonymous").Strategy;
 const validatePassword = require("./password.js").validate;
