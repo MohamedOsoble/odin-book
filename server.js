@@ -79,7 +79,7 @@ async function startServer() {
     const BUILD_FILE = require(BUILD_PATH);
     app.use(BUILD_FILE.app);
   }
-  server.listen(5172, () => {
+  server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 }
