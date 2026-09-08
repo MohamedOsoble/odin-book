@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String         @id @default(uuid())
+  email            String         @unique
+  username         String         @unique
+  salt             String
+  hash             String
+  profile          Profile?
+  postsCreated     Post[]
+  comments         Comment[]
+  following        Follows[]      @relation("following")
+  followers        Follows[]      @relation("followers")
+  receivedRequests Requests[]     @relation("received")
+  sentRequests     Requests[]     @relation("requested")
+  conversations    Conversation[]
+  messages         Message[]
+  postsLiked       Post[]         @relation("Postlikes")
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  content   String?
+  createdAt DateTime  @default(now())
+  published Boolean   @default(true)
+  updatedAt DateTime  @default(now())
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId  String
+  likedby   User[]    @relation("Postlikes")
+  comments  Comment[]
+}
+
+model Comment {
+  id              String    @id @default(uuid())
+  content         String
+  createdAt       DateTime  @default(now())
+  post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId          String
+  author          User      @relation(fields: [authorId], references: [id])
+  authorId        String
+  parentCommentId String?
+  parentComment   Comment?  @relation("ParentReplies", fields: [parentCommentId], references: [id])
+  replies         Comment[] @relation("ParentReplies")
+}
+
+model Follows {
+  followerId  String
+  follower    User   @relation("following", fields: [followerId], references: [id])
+  followingId String
+  following   User   @relation("followers", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId]) // Composite ID
+}
+
+model Requests {
+  senderId   String
+  sender     User   @relation("requested", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User   @relation("received", fields: [receiverId], references: [id])
+
+  @@id([senderId, receiverId]) //Composite ID
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  messages  Message[]
+  users     User[] // For group or 1-on-1 chats
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+}
+
+model Profile {
+  profileId String    @id @default(uuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String    @unique
+  name      String    @default("Nameless User")
+  bio       String?
+  dob       DateTime?
+  avatar    String    @default("public/uploads/default-avatar.jpg")
+}

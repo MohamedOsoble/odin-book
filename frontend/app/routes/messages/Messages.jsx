@@ -14,6 +14,7 @@ export async function clientLoader() {
 
 function Chat({ currentUser, targetUser, messages }) {
   const messageRef = useRef(null);
+  console.log(messages);
 
   useEffect(() => {
     messageRef.current?.lastElementChild?.scrollIntoView();

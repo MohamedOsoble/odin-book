@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = `${import.meta.env.VITE_API}profile/`;
+const URL = "/api/profile/";
 const options = {
   method: "POST",
   headers: {

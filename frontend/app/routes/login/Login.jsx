@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 export default function Login() {
   const [formState, setFormState] = useState({});
   const [formErrors, setFormErrors] = useState({});
-  const { user: currentUser, login } = useUser();
+  const { user: currentUser, login, guestLogin } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +36,16 @@ export default function Login() {
       setFormErrors({
         errorMessage: response.data.message,
       });
+    }
+  };
+
+  const handleGuest = async (event) => {
+    event.preventDefault();
+    const response = await guestLogin();
+    if (response.status === 200) {
+      redirectUser();
+    } else {
+      console.error("Error has occured");
     }
   };
 
@@ -72,6 +82,11 @@ export default function Login() {
         </div>
         {formErrors ? <div>{formErrors.errorMessage}</div> : <></>}
       </form>
+      <div>
+        <button className="btn" onClick={handleGuest}>
+          Continue as guest
+        </button>
+      </div>
     </div>
   );
 }

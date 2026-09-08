@@ -13,7 +13,7 @@ export function stringMaxLength(string, n) {
   return string.slice(0, n);
 }
 
-export const socket = io("http://localhost:3000", {
+export const socket = io("/", {
   autoConnect: false,
   withCredentials: true,
 });

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = `${import.meta.env.VITE_API}messages/`;
+const URL = "/api/messages/";
 const options = {
   headers: {
     "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = `${import.meta.env.VITE_API}posts/`;
+const URL = "/api/posts/";
 const options = {
   method: "POST",
   headers: {
@@ -10,6 +10,7 @@ const options = {
 };
 
 export async function popular() {
+  console.log("running popular posts...");
   const response = await axios
     .get(URL + "popular", options)
     .catch(function (err) {

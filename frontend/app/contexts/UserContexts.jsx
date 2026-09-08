@@ -32,14 +32,17 @@ function UserProvider(props) {
         }
       })
       .catch((error) => {
+        console.log(error);
         setCurrentUser(false);
       });
+    console.log(currentUser);
   }, []); // run only once
 
   const login = useCallback(async (user) => {
     const response = await API.login(user);
     if (response.status === 200) {
       setCurrentUser(response.data.user);
+      console.log(response);
     }
     return response;
   }, []);
@@ -50,6 +53,14 @@ function UserProvider(props) {
     });
   }, []);
 
+  const guestLogin = useCallback(async () => {
+    const response = await API.guest();
+    if (response.status === 200) {
+      setCurrentUser(response.data.user);
+    }
+    return response;
+  }, []);
+
   // memo functions to optimise re-renders
   const contextValue = useMemo(
     () => ({
@@ -57,8 +68,9 @@ function UserProvider(props) {
       isLoading,
       login,
       logout,
+      guestLogin,
     }),
-    [currentUser, isLoading, login, logout],
+    [currentUser, isLoading, login, logout, guestLogin],
   );
 
   return <UserContext.Provider value={contextValue} {...props} />;

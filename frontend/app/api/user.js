@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = `${import.meta.env.VITE_API}user/`;
+const URL = "/api/user/";
 const options = {
   method: "POST",
   headers: {
@@ -43,6 +43,17 @@ export async function auth() {
     .get(URL + "checkAuth", options)
     .catch(function (error) {
       return error.response;
+    });
+  return response;
+}
+
+export async function guest() {
+  const response = await axios
+    .post(URL + "guest", {}, options)
+    .catch(function (error) {
+      if (error.response.status === 401) {
+        return error.response;
+      }
     });
   return response;
 }

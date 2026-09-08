@@ -1,0 +1,38 @@
+services:
+  application:
+    build:
+      context: .
+    ports:
+      - 5173:5173
+    env_file:
+      - ./.production.env
+    networks:
+      - prisma-network
+  postgresql:
+    image: postgres:15
+    restart: always
+    container_name: postgresql
+    environment:
+      - POSTGRES_DB=odin_book
+      - POSTGRES_USER=mohamed
+      - POSTGRES_PASSWORD=Morning1
+    ports:
+      - "5432:5432"
+    networks:
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mohamed -d odin_book"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+networks:
+  prisma-network:
+volumes:
+  postgres_data:

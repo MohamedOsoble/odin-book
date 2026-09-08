@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = `${import.meta.env.VITE_API}search/`;
+const URL = "/api/search/";
 const options = {
   headers: {
     "Content-Type": "application/json",
