@@ -1,0 +1,107 @@
+const issueJWT = require("../lib/jwt").issue;
+const passport = require("passport");
+const validate = require("../validators/user");
+const db = require("../queries/user");
+const { validationResult, matchedData } = require("express-validator");
+require("dotenv").config();
+
+exports.login = async (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (!user) {
+      return res.status(401).json({
+        message: "Incorrect user credentials, please check and try again",
+        user: user,
+      });
+    } else if (err) {
+      return res.status(500).json({
+        message: "Something went wrong with the request, please try again",
+        user: user,
+      });
+    }
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.status(500).json(err);
+      }
+      // generate a signed son web token with the contents of user object and return it in the response
+      const tokenObject = issueJWT(user);
+      res.cookie("jwt", tokenObject, {
+        httpOnly: true,
+        secure: false, // set to true in production with HTTPS
+        sameSite: "Lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      return res.json({
+        message: "Login successful",
+        user: { id: user.id, username: user.name },
+        tokenObject,
+      });
+    });
+  })(req, res);
+};
+
+exports.checkBody = (req, res, next) => {
+  console.log(req.body);
+  next();
+};
+
+exports.logout = (req, res) => {
+  if (req.cookies["jwt"]) {
+    return res.clearCookie("jwt").status(200).json({
+      success: true,
+      message: "You have logged out",
+    });
+  } else {
+    return res.status(400).json({
+      success: false,
+      message: "Login session already expired",
+    });
+  }
+};
+
+exports.checkAuth = (req, res) => {
+  if (req.user) {
+    return res.status(200).json({
+      user: req.user,
+    });
+  }
+  return res.status(200).json({
+    user: null,
+  });
+};
+
+exports.register = [
+  validate.register,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(200).json({ error: true, errors: errors.array() });
+    }
+    const user = await db.newUser(
+      req.body.username,
+      req.body.email,
+      req.body.password,
+    );
+    return res.status(200).json({
+      error: false,
+      message: "Successfully registered",
+      data: {
+        id: user.id,
+        username: user.username,
+      },
+    });
+  },
+];
+
+exports.all = async (req, res, next) => {
+  const result = await db.all();
+  return res.json(result);
+};
+
+exports.guest = async (req, res, next) => {
+  req.body = {
+    username: process.env.GUEST_USER,
+    password: process.env.GUEST_PASSWORD,
+  };
+  next();
+};
