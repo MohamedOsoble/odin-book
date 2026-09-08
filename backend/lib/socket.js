@@ -74,8 +74,8 @@ module.exports = function chatServer(expressApp, origin) {
     socket.emit("users", users);
 
     socket.on("send_message", async (data) => {
-      await db.createMessage(user.id, chat.id, data.message);
-      socket.to(chat.id).emit("receive_message", data);
+      await db.createMessage(user.id, socket.chat.id, data.message);
+      socket.to(socket.chat.id).emit("receive_message", data);
     });
 
     socket.on("disconnect", () => {
@@ -88,6 +88,7 @@ module.exports = function chatServer(expressApp, origin) {
     socket.on("start_chat", async (recipientId) => {
       const chat = await getChat(user.id, recipientId);
       const messages = cleanChat(chat);
+      socket.chat = chat;
       socket.emit("chat_history", messages);
     });
   });
