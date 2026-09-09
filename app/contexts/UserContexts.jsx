@@ -35,14 +35,12 @@ function UserProvider(props) {
         console.log(error);
         setCurrentUser(false);
       });
-    console.log(currentUser);
   }, []); // run only once
 
   const login = useCallback(async (user) => {
     const response = await API.login(user);
     if (response.status === 200) {
       setCurrentUser(response.data.user);
-      console.log(response);
     }
     return response;
   }, []);

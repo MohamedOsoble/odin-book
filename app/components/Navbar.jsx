@@ -4,7 +4,7 @@ import { findUser } from "../api/search";
 import { useNavigate } from "react-router";
 
 export const Navbar = () => {
-  const { currentUser } = useUser();
+  const { currentUser, isLoading } = useUser();
   const navigate = useNavigate();
 
   const search = async (e) => {
@@ -13,37 +13,42 @@ export const Navbar = () => {
     navigate("/search/" + username);
   };
 
-  const userNavLinks = [
-    { name: "Home", href: "/", sublinks: [] },
-    { name: "Profile", href: "/profile/" + currentUser.username, sublinks: [] },
-    {
-      name: "Explore",
-      href: "/posts",
-      sublinks: [
-        { name: "Following", href: "/posts/following" },
-        { name: "Recent", href: "/posts/recent" },
-        { name: "Popular", href: "/" },
-      ],
-    },
-    { name: "Messages", href: "/messages", sublinks: [] },
-    { name: "Logout", href: "/logout", sublinks: [] },
-  ];
+  function NavLinks(user) {
+    const userLinks = [
+      { name: "Home", href: "/", sublinks: [] },
+      {
+        name: "Profile",
+        href: "/profile/" + user.username,
+        sublinks: [],
+      },
+      {
+        name: "Explore",
+        href: "/posts",
+        sublinks: [
+          { name: "Following", href: "/posts/following" },
+          { name: "Recent", href: "/posts/recent" },
+          { name: "Popular", href: "/" },
+        ],
+      },
+      { name: "Messages", href: "/messages", sublinks: [] },
+      { name: "Logout", href: "/logout", sublinks: [] },
+    ];
 
-  const guestNavLinks = [
-    { name: "Home", href: "/", sublinks: [] },
-    {
-      name: "Explore",
-      href: "/posts",
-      sublinks: [
-        { name: "Popular", href: "/" },
-        { name: "Recent", href: "/posts/recent" },
-      ],
-    },
-    { name: "Register", href: "/register", sublinks: [] },
-    { name: "Login", href: "/login", sublinks: [] },
-  ];
+    const guestLinks = [
+      { name: "Home", href: "/", sublinks: [] },
+      {
+        name: "Explore",
+        href: "/posts",
+        sublinks: [
+          { name: "Popular", href: "/" },
+          { name: "Recent", href: "/posts/recent" },
+        ],
+      },
+      { name: "Register", href: "/register", sublinks: [] },
+      { name: "Login", href: "/login", sublinks: [] },
+    ];
 
-  function NavLinks(links) {
+    const links = user ? userLinks : guestLinks;
     return (
       <>
         {links.map((link) => {
@@ -75,6 +80,7 @@ export const Navbar = () => {
       </>
     );
   }
+
   return (
     <div className="max-lg:collapse bg-base-200 shadow-sm w-full rounded-md">
       <input id="navbar-1-toggle" className="peer hidden" type="checkbox" />
@@ -104,7 +110,7 @@ export const Navbar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            {currentUser ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+            {currentUser ? NavLinks(currentUser) : NavLinks(false)}
           </ul>
         </div>
         <div className="navbar-end">
@@ -121,7 +127,7 @@ export const Navbar = () => {
       </div>
       <div className="collapse-content lg:hidden z-1">
         <ul className="menu">
-          {currentUser ? NavLinks(userNavLinks) : NavLinks(guestNavLinks)}
+          {currentUser ? NavLinks(currentUser) : NavLinks(false)}
         </ul>
       </div>
     </div>

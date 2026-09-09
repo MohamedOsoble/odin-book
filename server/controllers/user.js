@@ -33,7 +33,7 @@ exports.login = async (req, res, next) => {
 
       return res.json({
         message: "Login successful",
-        user: { id: user.id, username: user.name },
+        user: user,
         tokenObject,
       });
     });
