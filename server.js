@@ -9,6 +9,7 @@ const path = require("node:path");
 const { Server } = require("socket.io");
 const { createServer } = require("node:http");
 const { join } = require("node:path");
+const getImage = require("./server/middleware/getImage.js");
 require("./server/lib/passport.js");
 
 // Short-circuit the type-checking of the built output.
@@ -47,9 +48,7 @@ app.use("/api/posts", routes.post);
 app.use("/api/profile", routes.profile);
 app.use("/api/messages", routes.messages);
 app.use("/api/search", routes.search);
-app.use("/api/public/uploads/:filename", (req, res, next) => {
-  res.sendFile(__dirname + "/server/public/uploads/" + req.params.filename);
-});
+app.use("/api/public/uploads/:filename", getImage.getAvatar);
 
 async function startServer() {
   if (DEVELOPMENT) {
