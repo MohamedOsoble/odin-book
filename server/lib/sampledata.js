@@ -52,7 +52,6 @@ async function populatePost(n) {
       data: {
         content: post.content,
         authorId: author.id,
-        published: post.isPublished,
       },
     });
   }
@@ -62,7 +61,6 @@ async function populatePost(n) {
 
 async function getAllPosts() {
   const posts = await prisma.post.findMany({});
-  console.log(posts);
   return posts;
 }
 
@@ -82,5 +80,5 @@ async function createProfiles() {
 export default async function populateDatabase() {
   await populateUsers(15);
   await createProfiles();
-  await createPosts(35);
+  await createPosts(75);
 }
