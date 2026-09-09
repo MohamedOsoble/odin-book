@@ -456,7 +456,9 @@ export default function Profile({ loaderData }) {
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loaderData.profile);
   const [error, setError] = useState(false);
-  const avatarSrc = `${import.meta.env.VITE_API}${loaderData.profile.avatar}`;
+  const avatarSrc =
+    `${import.meta.env.VITE_API}` +
+    `public/uploads/${loaderData.profile.avatar}`;
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentTab, setCurrentTab] = useState("Posts");

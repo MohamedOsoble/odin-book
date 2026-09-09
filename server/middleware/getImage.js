@@ -2,17 +2,10 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports.getAvatar = (req, res, next) => {
-  const filePath = path.join(
-    __dirname,
-    "../public/uploads/",
-    req.params.filename,
-  );
-  console.log(filePath);
-  if (fs.existsSync(filePath)) {
-    return res.sendFile(filePath);
+  const assetsDir = path.join(__dirname, "../public/uploads/");
+  if (fs.existsSync(assetsDir + req.params.filename)) {
+    return res.sendFile(assetsDir + req.params.filename);
   } else {
-    return res.sendFile(
-      path.join(__dirname, "../public/uploads/default-avatar.jpg"),
-    );
+    return res.sendFile(assetsDir + "default-avatar.jpg");
   }
 };

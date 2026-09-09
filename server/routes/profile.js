@@ -6,8 +6,9 @@ const multer = require("multer");
 const router = Router();
 
 // Currently storing on disk, consider changing to cloud storage later...
+const assetsDir = path.join(__dirname, "../public/uploads/");
 const storage = multer.diskStorage({
-  destination: "./public/uploads/",
+  destination: assetsDir,
   filename: function (req, file, cb) {
     cb(null, "IMAGE-" + Date.now() + path.extname(file.originalname));
   },

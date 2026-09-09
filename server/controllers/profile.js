@@ -2,6 +2,7 @@ const dbProfile = require("../queries/profile");
 const dbUser = require("../queries/user");
 const validate = require("../validators/post");
 const fm = require("../lib/fileManagement");
+const path = require("path");
 
 const findUser = async (username) => {
   const user = await dbUser.getUser(username);
@@ -41,9 +42,11 @@ exports.newAvatar = async (req, res, next) => {
   const user = await dbUser.getUser(username);
 
   try {
-    const newProfile = await dbProfile.updateAvatar(user.id, req.file.path);
-    if (user.profile.avatar != "/public/uploads/default-avatar.jpg") {
-      fm.deleteImage(user.profile.avatar);
+    const newProfile = await dbProfile.updateAvatar(user.id, req.file.filename);
+    if (user.profile.avatar != "default-avatar.jpg") {
+      fm.deleteImage(
+        path.join(__dirname, "../public/uploads/", user.profile.avatar),
+      );
     }
     return res.json(newProfile);
   } catch (err) {

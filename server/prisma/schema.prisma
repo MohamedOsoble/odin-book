@@ -98,5 +98,5 @@ model Profile {
   name      String    @default("Nameless User")
   bio       String?
   dob       DateTime?
-  avatar    String    @default("public/uploads/default-avatar.jpg")
+  avatar    String    @default("default-avatar.jpg")
 }
