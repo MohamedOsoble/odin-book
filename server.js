@@ -14,7 +14,7 @@ require("./server/lib/passport.js");
 // Short-circuit the type-checking of the built output.
 const BUILD_PATH = "./build/server/index.js";
 const DEVELOPMENT = process.env.NODE_ENV === "development";
-const PORT = Number.parseInt(process.env.PORT || "5172");
+const PORT = Number.parseInt(process.env.PORT || "5173");
 
 // Set origin paths
 const origin = [
@@ -23,7 +23,7 @@ const origin = [
   "http://localhost:3000",
   "http://127.0.0.1:5173",
   "http://localhost:5173",
-  "http://localhost:45027",
+  "http://odinbook.mohzzy.com",
 ];
 // Instantiate express app.
 const app = express();

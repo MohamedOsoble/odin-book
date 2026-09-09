@@ -12,4 +12,7 @@ export default defineConfig(({ isSsrBuild }) => ({
     rollupOptions: isSsrBuild ? { input: "./server/app.js" } : undefined,
   },
   plugins: [reactRouter(), tailwindcss()],
+  server: {
+    allowedHosts: [".mohzzy.com"],
+  },
 }));
