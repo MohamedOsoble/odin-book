@@ -77,8 +77,12 @@ async function createProfiles() {
   }
 }
 
-export default async function populateDatabase() {
+async function populateDatabase() {
   await populateUsers(15);
   await createProfiles();
   await createPosts(75);
 }
+
+module.exports = {
+  populateDatabase,
+};
