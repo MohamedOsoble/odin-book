@@ -6,7 +6,7 @@ import { chatDate } from "../utils/utility";
 import { LoadingComponent } from "./Loading";
 import { useNavigate } from "react-router";
 
-const API_URL = `${import.meta.env.VITE_API}` + "public/uploads/";
+const API_URL = "/api/public/uploads/";
 
 function LikeSvg({ liked }) {
   if (liked) {
