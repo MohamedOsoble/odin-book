@@ -21,7 +21,7 @@ function createPostData() {
 
 async function registerUser(user) {
   const response = await axios.post(
-    "http://localhost:3000/user/register",
+    "http://odinbook.mohzzy.com/api/user/register",
     user,
   );
   return response;
@@ -79,10 +79,7 @@ async function createProfiles() {
 
 async function populateDatabase() {
   await populateUsers(15);
-  await createProfiles();
   await createPosts(75);
 }
 
-module.exports = {
-  populateDatabase,
-};
+populateDatabase();
