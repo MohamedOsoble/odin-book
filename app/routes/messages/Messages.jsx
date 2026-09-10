@@ -5,7 +5,7 @@ import { useUser } from "../../contexts/UserContexts";
 import { LoadingComponent } from "../../components/Loading";
 import { Alert } from "../../components/Error";
 
-const API_URL = `${import.meta.env.VITE_API}`;
+const API_URL = "/api/public/uploads/";
 
 export async function clientLoader() {
   const data = await API.getMessageHome();

@@ -143,3 +143,6 @@ vite.config.ts.timestamp-*
 
 # Testing uploads
 /server/public
+
+# Ignore build
+/build

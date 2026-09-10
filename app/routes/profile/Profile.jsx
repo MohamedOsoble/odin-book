@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import * as API from "../../api/profile";
 import PostList from "../../components/Post";
@@ -356,7 +356,7 @@ function FollowList({ followers, type, id }) {
           >
             <figure>
               <img
-                src={`${import.meta.env.VITE_API}${targetUser.profile.avatar}`}
+                src={"/api/public/uploads" + targetUser.profile.avatar}
                 className="rounded-full pl-2 w-12 h-12 rounded-full"
               />
             </figure>
@@ -456,9 +456,7 @@ export default function Profile({ loaderData }) {
   const [editing, setEditing] = useState(false);
   const [profile, setProfile] = useState(loaderData.profile);
   const [error, setError] = useState(false);
-  const avatarSrc =
-    `${import.meta.env.VITE_API}` +
-    `public/uploads/${loaderData.profile.avatar}`;
+  const avatarSrc = "/api/public/uploads/" + loaderData.profile.avatar;
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentTab, setCurrentTab] = useState("Posts");

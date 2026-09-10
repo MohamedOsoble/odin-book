@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router";
 import * as API from "../../api/posts";
 import PostList from "../../components/Post";
 import CreatePost from "../../components/CreatePost";

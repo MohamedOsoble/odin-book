@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router";
 import { useUser } from "../../contexts/UserContexts";
 import { LoadingComponent } from "../../components/Loading";
 import * as API from "../../api/search";
