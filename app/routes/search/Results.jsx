@@ -4,7 +4,7 @@ import * as API from "../../api/search";
 import { follow } from "../../api/profile";
 import { useState, useEffect } from "react";
 
-const API_URL = `${import.meta.env.VITE_API}`;
+const API_URL = "/api/";
 
 export async function clientLoader({ params }) {
   const response = await API.findUser(params.username);
